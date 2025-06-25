@@ -1,0 +1,994 @@
+[
+  {
+    "title": "Backend Developer",
+    "company": "OpenAI",
+    "location": "Vadodara, India",
+    "remote": false,
+    "salary": "6-10 LPA",
+    "type": "Part-time",
+    "skills": [
+      "Node.js",
+      "JavaScript",
+      "PostgreSQL",
+      "Linux"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-03"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "TCS",
+    "location": "Gurugram, India",
+    "remote": true,
+    "salary": "3-6 LPA",
+    "type": "Contract",
+    "skills": [
+      "Django",
+      "TypeScript",
+      "SQL",
+      "Terraform",
+      "Azure",
+      "GCP"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-23"
+  },
+  {
+    "title": "Product Manager",
+    "company": "Microsoft",
+    "location": "Navi Mumbai, India",
+    "remote": false,
+    "salary": "15-20 LPA",
+    "type": "Contract",
+    "skills": [
+      "Python",
+      "TypeScript",
+      "Microservices",
+      "Redis"
+    ],
+    "description": "We are looking for a Product Manager to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-16"
+  },
+  {
+    "title": "AI Researcher",
+    "company": "Accenture",
+    "location": "Thanjavur, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Vue",
+      "Spring Boot",
+      "Docker",
+      "Microservices",
+      "Django",
+      "Python"
+    ],
+    "description": "We are looking for a AI Researcher to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",    
+    "posted_date": "2025-05-29"
+  },
+  {
+    "title": "Machine Learning Engineer",
+    "company": "Microsoft",
+    "location": "Srinagar, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Part-time",
+    "skills": [
+      "Ansible",
+      "PostgreSQL",
+      "Git",
+      "MongoDB"
+    ],
+    "description": "We are looking for a Machine Learning Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-18"
+  },
+  {
+    "title": "AI Researcher",
+    "company": "Google",
+    "location": "Dehradun, India",
+    "remote": false,
+    "salary": "3-6 LPA",
+    "type": "Part-time",
+    "skills": [
+      "MySQL",
+      "Node.js",
+      "REST APIs",
+      "Java",
+      "Apache Kafka",
+      "PostgreSQL"
+    ],
+    "description": "We are looking for a AI Researcher to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",    
+    "posted_date": "2025-05-11"
+  },
+  {
+    "title": "AI Researcher",
+    "company": "Infosys",
+    "location": "Toronto, Canada",
+    "remote": true,
+    "salary": "80-120k USD",
+    "type": "Part-time",
+    "skills": [
+      "GCP",
+      "Flask",
+      "C++",
+      "Java",
+      "Vue",
+      "MongoDB",
+      "Terraform",
+      "Angular"
+    ],
+    "description": "We are looking for a AI Researcher to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",    
+    "posted_date": "2025-05-25"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "Microsoft",
+    "location": "Tokyo, Japan",
+    "remote": true,
+    "salary": "50-80k USD",
+    "type": "Part-time",
+    "skills": [
+      "Flask",
+      "Git",
+      "Jenkins",
+      "TensorFlow",
+      "PyTorch",
+      "Vue"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-11"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "Google",
+    "location": "Mangaluru, India",
+    "remote": true,
+    "salary": "3-6 LPA",
+    "type": "Full-time",
+    "skills": [
+      "GraphQL",
+      "MongoDB",
+      "MySQL",
+      "Git",
+      "Vue",
+      "React"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-29"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "TCS",
+    "location": "Salem, India",
+    "remote": true,
+    "salary": "30+ LPA",
+    "type": "Full-time",
+    "skills": [
+      "PostgreSQL",
+      "GCP",
+      "Git",
+      "Ansible",
+      "MongoDB",
+      "Microservices",
+      "JavaScript"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-05"
+  },
+  {
+    "title": "Product Manager",
+    "company": "Capgemini",
+    "location": "Imphal, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Spring Boot",
+      "Ansible",
+      "AWS",
+      "PyTorch"
+    ],
+    "description": "We are looking for a Product Manager to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-06"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "IBM",
+    "location": "Kanpur, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "React",
+      "TensorFlow",
+      "Kubernetes",
+      "Microservices",
+      "Flask",
+      "PostgreSQL",
+      "Azure"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-24"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "Infosys",
+    "location": "Thiruvananthapuram, India",
+    "remote": true,
+    "salary": "10-15 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Linux",
+      "Redis",
+      "AWS",
+      "Docker",
+      "Jenkins",
+      "TypeScript"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-05"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "Capgemini",
+    "location": "Bengaluru, India",
+    "remote": false,
+    "salary": "30+ LPA",
+    "type": "Full-time",
+    "skills": [
+      "Python",
+      "Vue",
+      "Git",
+      "TypeScript",
+      "Angular"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-08"
+  },
+  {
+    "title": "DevOps Engineer",
+    "company": "Microsoft",
+    "location": "Cuttack, India",
+    "remote": false,
+    "salary": "30+ LPA",
+    "type": "Internship",
+    "skills": [
+      "Ansible",
+      "SQL",
+      "MongoDB",
+      "Azure",
+      "Git",
+      "C++"
+    ],
+    "description": "We are looking for a DevOps Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-24"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "Amazon",
+    "location": "Srinagar, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Contract",
+    "skills": [
+      "GCP",
+      "Apache Kafka",
+      "Azure",
+      "Microservices"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-27"
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "company": "Accenture",
+    "location": "Visakhapatnam, India",
+    "remote": true,
+    "salary": "10-15 LPA",
+    "type": "Contract",
+    "skills": [
+      "JavaScript",
+      "Apache Kafka",
+      "MySQL",
+      "Node.js"
+    ],
+    "description": "We are looking for a Cybersecurity Analyst to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-23"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "Capgemini",
+    "location": "Remote",
+    "remote": false,
+    "salary": "50-80k USD",
+    "type": "Contract",
+    "skills": [
+      "REST APIs",
+      "TypeScript",
+      "Java",
+      "Git",
+      "GraphQL",
+      "Apache Kafka",
+      "Angular"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-12"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "Netflix",
+    "location": "Delhi NCR, India",
+    "remote": false,
+    "salary": "30+ LPA",
+    "type": "Part-time",
+    "skills": [
+      "Microservices",
+      "MySQL",
+      "Django",
+      "SQL",
+      "Git"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-12"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "Amazon",
+    "location": "Rajkot, India",
+    "remote": true,
+    "salary": "3-6 LPA",
+    "type": "Part-time",
+    "skills": [
+      "TypeScript",
+      "MySQL",
+      "Java",
+      "Azure",
+      "GCP"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-06-01"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "TCS",
+    "location": "Dubai, UAE",
+    "remote": false,
+    "salary": "80-120k USD",
+    "type": "Internship",
+    "skills": [
+      "TensorFlow",
+      "CI/CD",
+      "Django",
+      "JavaScript",
+      "Microservices",
+      "GraphQL",
+      "TypeScript"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-23"
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "company": "Infosys",
+    "location": "Indore, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Part-time",
+    "skills": [
+      "TypeScript",
+      "Node.js",
+      "MySQL",
+      "Terraform",
+      "Flask"
+    ],
+    "description": "We are looking for a Cybersecurity Analyst to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-06"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "Capgemini",
+    "location": "Shimla, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Part-time",
+    "skills": [
+      "AWS",
+      "React",
+      "CI/CD",
+      "Bash",
+      "Vue",
+      "GCP",
+      "Node.js",
+      "Spring Boot"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-14"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "TCS",
+    "location": "Imphal, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Docker",
+      "Python",
+      "TensorFlow",
+      "MongoDB",
+      "Flask",
+      "Git",
+      "Linux",
+      "Java"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-26"
+  },
+  {
+    "title": "Product Manager",
+    "company": "OpenAI",
+    "location": "Hyderabad, India",
+    "remote": true,
+    "salary": "3-6 LPA",
+    "type": "Part-time",
+    "skills": [
+      "C++",
+      "Angular",
+      "TypeScript",
+      "Microservices"
+    ],
+    "description": "We are looking for a Product Manager to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-24"
+  },
+  {
+    "title": "Product Manager",
+    "company": "IBM",
+    "location": "Remote",
+    "remote": true,
+    "salary": "160k+ USD",
+    "type": "Part-time",
+    "skills": [
+      "Ansible",
+      "CI/CD",
+      "TypeScript",
+      "Spring Boot",
+      "Flask"
+    ],
+    "description": "We are looking for a Product Manager to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-14"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "TCS",
+    "location": "Guwahati, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Flask",
+      "React",
+      "Git",
+      "Python",
+      "CI/CD",
+      "C++"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-09"
+  },
+  {
+    "title": "Data Scientist",
+    "company": "Capgemini",
+    "location": "Vadodara, India",
+    "remote": false,
+    "salary": "6-10 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Spring Boot",
+      "Vue",
+      "Azure",
+      "Ansible",
+      "Kubernetes",
+      "SQL",
+      "Node.js"
+    ],
+    "description": "We are looking for a Data Scientist to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",   
+    "posted_date": "2025-05-06"
+  },
+  {
+    "title": "AI Researcher",
+    "company": "OpenAI",
+    "location": "Salem, India",
+    "remote": true,
+    "salary": "30+ LPA",
+    "type": "Internship",
+    "skills": [
+      "Azure",
+      "Bash",
+      "Elasticsearch",
+      "Redis"
+    ],
+    "description": "We are looking for a AI Researcher to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",    
+    "posted_date": "2025-05-28"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "OpenAI",
+    "location": "Aizawl, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Docker",
+      "MySQL",
+      "AWS",
+      "TypeScript",
+      "TensorFlow",
+      "SQL",
+      "Apache Kafka",
+      "GCP"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-25"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "Infosys",
+    "location": "Aurangabad, India",
+    "remote": true,
+    "salary": "30+ LPA",
+    "type": "Full-time",
+    "skills": [
+      "Vue",
+      "PyTorch",
+      "Azure",
+      "GCP"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-08"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "Netflix",
+    "location": "Vellore, India",
+    "remote": false,
+    "salary": "10-15 LPA",
+    "type": "Contract",
+    "skills": [
+      "C++",
+      "Azure",
+      "PyTorch",
+      "MySQL",
+      "Apache Kafka"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-29"
+  },
+  {
+    "title": "Product Manager",
+    "company": "IBM",
+    "location": "Kolkata, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Git",
+      "React",
+      "Linux",
+      "Django",
+      "Vue"
+    ],
+    "description": "We are looking for a Product Manager to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-19"
+  },
+  {
+    "title": "Product Manager",
+    "company": "OpenAI",
+    "location": "Hyderabad, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Full-time",
+    "skills": [
+      "PostgreSQL",
+      "Elasticsearch",
+      "MySQL",
+      "REST APIs",
+      "SQL",
+      "Terraform",
+      "React",
+      "CI/CD"
+    ],
+    "description": "We are looking for a Product Manager to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-06"
+  },
+  {
+    "title": "AI Researcher",
+    "company": "Google",
+    "location": "Pondicherry, India",
+    "remote": false,
+    "salary": "20-30 LPA",
+    "type": "Contract",
+    "skills": [
+      "Docker",
+      "SQL",
+      "Angular",
+      "Python"
+    ],
+    "description": "We are looking for a AI Researcher to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",    
+    "posted_date": "2025-05-05"
+  },
+  {
+    "title": "DevOps Engineer",
+    "company": "TCS",
+    "location": "Aurangabad, India",
+    "remote": false,
+    "salary": "10-15 LPA",
+    "type": "Contract",
+    "skills": [
+      "React",
+      "Microservices",
+      "Flask",
+      "Jenkins",
+      "Apache Kafka",
+      "Django"
+    ],
+    "description": "We are looking for a DevOps Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-16"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "Google",
+    "location": "Dubai, UAE",
+    "remote": false,
+    "salary": "120-160k USD",
+    "type": "Contract",
+    "skills": [
+      "PostgreSQL",
+      "Django",
+      "JavaScript",
+      "Bash"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-02"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "Capgemini",
+    "location": "Mysuru, India",
+    "remote": false,
+    "salary": "20-30 LPA",
+    "type": "Part-time",
+    "skills": [
+      "GraphQL",
+      "MySQL",
+      "Python",
+      "TypeScript",
+      "TensorFlow",
+      "Kubernetes"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-06-01"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "IBM",
+    "location": "Haridwar, India",
+    "remote": false,
+    "salary": "3-6 LPA",
+    "type": "Part-time",
+    "skills": [
+      "Microservices",
+      "AWS",
+      "Linux",
+      "C++",
+      "PostgreSQL",
+      "React",
+      "TypeScript",
+      "REST APIs"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-16"
+  },
+  {
+    "title": "Machine Learning Engineer",
+    "company": "Infosys",
+    "location": "Chandigarh, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Python",
+      "Ansible",
+      "Vue",
+      "Terraform",
+      "Kubernetes",
+      "GraphQL",
+      "Elasticsearch",
+      "Docker"
+    ],
+    "description": "We are looking for a Machine Learning Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-20"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "IBM",
+    "location": "Dubai, UAE",
+    "remote": true,
+    "salary": "160k+ USD",
+    "type": "Full-time",
+    "skills": [
+      "Angular",
+      "Elasticsearch",
+      "GCP",
+      "PostgreSQL"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-02"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "Microsoft",
+    "location": "Thane, India",
+    "remote": true,
+    "salary": "10-15 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Angular",
+      "Redis",
+      "C++",
+      "Vue",
+      "Kubernetes"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-14"
+  },
+  {
+    "title": "Backend Developer",
+    "company": "OpenAI",
+    "location": "Ahmedabad, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Spring Boot",
+      "C++",
+      "SQL",
+      "Python",
+      "CI/CD",
+      "PostgreSQL"
+    ],
+    "description": "We are looking for a Backend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-17"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "IBM",
+    "location": "Salem, India",
+    "remote": true,
+    "salary": "30+ LPA",
+    "type": "Internship",
+    "skills": [
+      "Terraform",
+      "Java",
+      "CI/CD",
+      "Redis",
+      "Flask",
+      "TypeScript"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-06"
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "company": "Google",
+    "location": "Ahmedabad, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Apache Kafka",
+      "PyTorch",
+      "Redis",
+      "PostgreSQL"
+    ],
+    "description": "We are looking for a Cybersecurity Analyst to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-05"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "Microsoft",
+    "location": "Pondicherry, India",
+    "remote": true,
+    "salary": "3-6 LPA",
+    "type": "Contract",
+    "skills": [
+      "Azure",
+      "Docker",
+      "Python",
+      "GCP"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-25"
+  },
+  {
+    "title": "DevOps Engineer",
+    "company": "Netflix",
+    "location": "Hyderabad, India",
+    "remote": true,
+    "salary": "15-20 LPA",
+    "type": "Part-time",
+    "skills": [
+      "Jenkins",
+      "React",
+      "Ansible",
+      "Azure",
+      "REST APIs"
+    ],
+    "description": "We are looking for a DevOps Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-06-01"
+  },
+  {
+    "title": "Frontend Developer",
+    "company": "OpenAI",
+    "location": "Tokyo, Japan",
+    "remote": true,
+    "salary": "120-160k USD",
+    "type": "Internship",
+    "skills": [
+      "Linux",
+      "Node.js",
+      "Kubernetes",
+      "MongoDB",
+      "GraphQL",
+      "JavaScript"
+    ],
+    "description": "We are looking for a Frontend Developer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-26"
+  },
+  {
+    "title": "Machine Learning Engineer",
+    "company": "Capgemini",
+    "location": "Chennai, India",
+    "remote": true,
+    "salary": "3-6 LPA",
+    "type": "Full-time",
+    "skills": [
+      "Node.js",
+      "Ansible",
+      "React",
+      "Redis",
+      "Spring Boot",
+      "Terraform",
+      "Java",
+      "Kubernetes"
+    ],
+    "description": "We are looking for a Machine Learning Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-22"
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "company": "IBM",
+    "location": "Kanpur, India",
+    "remote": true,
+    "salary": "30+ LPA",
+    "type": "Full-time",
+    "skills": [
+      "Flask",
+      "TypeScript",
+      "Django",
+      "Jenkins",
+      "SQL",
+      "React",
+      "Kubernetes",
+      "Vue"
+    ],
+    "description": "We are looking for a Cybersecurity Analyst to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-14"
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "company": "Netflix",
+    "location": "Imphal, India",
+    "remote": true,
+    "salary": "20-30 LPA",
+    "type": "Full-time",
+    "skills": [
+      "SQL",
+      "Bash",
+      "Jenkins",
+      "Spring Boot",
+      "Vue"
+    ],
+    "description": "We are looking for a Cybersecurity Analyst to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-14"
+  },
+  {
+    "title": "AI Researcher",
+    "company": "Amazon",
+    "location": "Remote",
+    "remote": false,
+    "salary": "160k+ USD",
+    "type": "Part-time",
+    "skills": [
+      "PostgreSQL",
+      "Angular",
+      "Jenkins",
+      "REST APIs",
+      "Linux",
+      "PyTorch"
+    ],
+    "description": "We are looking for a AI Researcher to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",    
+    "posted_date": "2025-05-17"
+  },
+  {
+    "title": "DevOps Engineer",
+    "company": "Netflix",
+    "location": "Noida, India",
+    "remote": false,
+    "salary": "20-30 LPA",
+    "type": "Internship",
+    "skills": [
+      "Apache Kafka",
+      "Microservices",
+      "Azure",
+      "Node.js",
+      "PostgreSQL",
+      "GCP"
+    ],
+    "description": "We are looking for a DevOps Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-30"
+  },
+  {
+    "title": "Cloud Architect",
+    "company": "Amazon",
+    "location": "Imphal, India",
+    "remote": true,
+    "salary": "15-20 LPA",
+    "type": "Full-time",
+    "skills": [
+      "GraphQL",
+      "PostgreSQL",
+      "Angular",
+      "Vue",
+      "Docker",
+      "Java",
+      "CI/CD",
+      "Linux"
+    ],
+    "description": "We are looking for a Cloud Architect to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",  
+    "posted_date": "2025-05-17"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "Microsoft",
+    "location": "Shimla, India",
+    "remote": false,
+    "salary": "6-10 LPA",
+    "type": "Part-time",
+    "skills": [
+      "Elasticsearch",
+      "Microservices",
+      "Redis",
+      "Node.js",
+      "Ansible"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-25"
+  },
+  {
+    "title": "Software Engineer",
+    "company": "Google",
+    "location": "Srinagar, India",
+    "remote": true,
+    "salary": "6-10 LPA",
+    "type": "Part-time",
+    "skills": [
+      "TensorFlow",
+      "SQL",
+      "JavaScript",
+      "Java"
+    ],
+    "description": "We are looking for a Software Engineer to join our team. You will work with modern technologies and be responsible for building and maintaining scalable solutions.",
+    "posted_date": "2025-05-12"
+  }
+]
