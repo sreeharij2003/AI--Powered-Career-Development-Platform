@@ -1,0 +1,12 @@
+{
+  "jobDescription": {
+    "company": "Example Corp",
+    "description": "We are hiring a software engineer with experience in React and Node.js.",
+    "jobId": "job123"
+  },
+  "userProfile": {
+    "skills": ["React", "Node.js", "TypeScript", "MongoDB"],
+    "experience": [],
+    "education": []
+  }
+} 

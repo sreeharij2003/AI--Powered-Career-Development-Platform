@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Senior Software Engineer",
+    "company": "TechCorp",
+    "location": "New York, NY",
+    "remote": true,
+    "salary": "$120,000 - $150,000",
+    "type": "Full-time",
+    "skills": ["Python", "React", "Node.js", "AWS"],
+    "description": "We are looking for a Senior Software Engineer to join our team. The ideal candidate should have 5+ years of experience in full-stack development, with expertise in Python, React, and Node.js. Experience with cloud platforms like AWS is a plus. You will be responsible for designing and implementing scalable solutions, mentoring junior developers, and collaborating with cross-functional teams."
+  },
+  {
+    "id": 2,
+    "title": "Data Scientist",
+    "company": "DataAnalytics Inc",
+    "location": "San Francisco, CA",
+    "remote": false,
+    "salary": "$130,000 - $160,000",
+    "type": "Full-time",
+    "skills": ["Python", "Machine Learning", "SQL", "TensorFlow"],
+    "description": "Join our data science team to work on cutting-edge machine learning projects. The ideal candidate should have a strong background in statistics, machine learning, and programming. Experience with Python, SQL, and deep learning frameworks like TensorFlow is required. You will be developing predictive models, analyzing large datasets, and presenting insights to stakeholders."
+  },
+  {
+    "id": 3,
+    "title": "Frontend Developer",
+    "company": "WebSolutions",
+    "location": "Remote",
+    "remote": true,
+    "salary": "$90,000 - $120,000",
+    "type": "Full-time",
+    "skills": ["JavaScript", "React", "TypeScript", "CSS"],
+    "description": "We are seeking a Frontend Developer to create beautiful and responsive user interfaces. The ideal candidate should have 3+ years of experience with modern JavaScript frameworks, particularly React. Strong knowledge of TypeScript, CSS, and responsive design principles is required. You will be working closely with our design team to implement pixel-perfect UIs and ensure great user experiences."
+  }
+] 
