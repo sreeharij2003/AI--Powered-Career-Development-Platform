@@ -2,18 +2,37 @@ import Job, { IJob } from '../models/Job';
 
 class JobService {
   /**
-   * Get all jobs from the database
+   * Get all jobs from the database (without automatic mock fallback)
    */
   async getAllJobs(): Promise<IJob[]> {
     try {
       const jobs = await Job.find({ is_active: true }).sort({ posted_date: -1 });
-      
+      console.log(`📊 Found ${jobs.length} jobs in database`);
+
+      // Ensure each job has a proper id field for frontend
+      return jobs.map(job => ({
+        ...job.toObject(),
+        id: job._id.toString()
+      }));
+    } catch (error) {
+      console.error('❌ Error getting all jobs:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get all jobs with mock fallback (for backward compatibility)
+   */
+  async getAllJobsWithFallback(): Promise<IJob[]> {
+    try {
+      const jobs = await Job.find({ is_active: true }).sort({ posted_date: -1 });
+
       // If no jobs found in the database, return mock jobs
       if (jobs.length === 0) {
         console.log('No jobs found in database, returning mock jobs');
         return this.getMockJobs();
       }
-      
+
       return jobs;
     } catch (error) {
       console.error('Error getting all jobs:', error);
@@ -237,7 +256,13 @@ class JobService {
   async createJob(jobData: any): Promise<IJob> {
     try {
       const job = new Job(jobData);
-      return await job.save();
+      const savedJob = await job.save();
+
+      // Ensure the returned job has a proper id field
+      return {
+        ...savedJob.toObject(),
+        id: savedJob._id.toString()
+      } as IJob;
     } catch (error) {
       console.error('Error creating job:', error);
       throw error;
@@ -311,14 +336,34 @@ class JobService {
       // Calculate total pages
       const totalPages = Math.ceil(total / limit);
       
+      // Ensure each job has a proper id field for frontend
+      const jobsWithId = jobs.map(job => ({
+        ...job.toObject(),
+        id: job._id.toString()
+      }));
+
       return {
-        jobs,
+        jobs: jobsWithId,
         total,
         page,
         totalPages
       };
     } catch (error) {
       console.error(`Error searching jobs with query "${query}":`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create multiple jobs in the database
+   */
+  async createManyJobs(jobs: any[]): Promise<IJob[]> {
+    try {
+      const savedJobs = await Job.insertMany(jobs);
+      console.log(`Successfully saved ${savedJobs.length} jobs to database`);
+      return savedJobs;
+    } catch (error) {
+      console.error('Error creating multiple jobs:', error);
       throw error;
     }
   }

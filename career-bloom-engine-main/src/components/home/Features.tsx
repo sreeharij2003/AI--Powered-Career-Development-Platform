@@ -55,11 +55,11 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-purple-950 transition-colors duration-500">
       <div className="container px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl font-bold tracking-tight">Supercharge Your Job Search</h2>
-          <p className="text-muted-foreground mt-4">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Supercharge Your Job Search</h2>
+          <p className="text-muted-foreground mt-4 dark:text-gray-400">
             CareerBloom combines cutting-edge technology with human-centered design to transform how you find and secure your next role.
           </p>
         </div>
@@ -68,13 +68,18 @@ const Features = () => {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+              className="relative backdrop-blur-lg bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 p-6 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:shadow-3xl hover:scale-[1.03] hover:border-primary-purple/60 dark:hover:border-primary-purple/80 group overflow-hidden"
             >
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              <div className="absolute inset-0 pointer-events-none rounded-2xl bg-gradient-to-br from-primary-purple/10 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-300" />
+              <div className="relative w-14 h-14 rounded-xl bg-primary-purple/10 dark:bg-primary-purple/20 flex items-center justify-center mb-4 shadow-sm group-hover:bg-primary-purple/20 dark:group-hover:bg-primary-purple/30 group-hover:shadow-lg group-hover:scale-110 transition-all">
                 {feature.icon}
               </div>
-              <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="font-semibold text-xl mb-2 text-gray-900 dark:text-white group-hover:text-primary-purple transition-colors">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
@@ -82,7 +87,7 @@ const Features = () => {
         <div className="mt-12 text-center">
           <Link 
             to="/features" 
-            className="text-primary-purple hover:underline inline-flex items-center"
+            className="text-primary-purple hover:underline inline-flex items-center font-medium dark:text-primary-purple-light"
           >
             Explore all features
             <svg 

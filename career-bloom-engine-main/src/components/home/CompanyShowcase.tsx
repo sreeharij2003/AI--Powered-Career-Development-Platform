@@ -1,7 +1,9 @@
-
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { API } from "@/services/api";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+// Removed Swiper imports to avoid potential issues
 
 // Sample company data
 const companies = [
@@ -50,8 +52,64 @@ const companies = [
 ];
 
 const CompanyShowcase = () => {
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch companies on component mount
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
+
+  const fetchCompanies = async () => {
+    try {
+      setLoading(true);
+      console.log('🔍 Fetching trending companies for showcase...');
+
+      const response = await API.companies.getTrending(12);
+      console.log('✅ Company showcase response:', response);
+
+      if (response.success && response.companies) {
+        setCompanies(response.companies);
+        console.log(`📋 Loaded ${response.companies.length} companies for showcase`);
+      } else {
+        throw new Error('Invalid response format');
+      }
+    } catch (err: any) {
+      console.error('❌ Error fetching companies for showcase:', err);
+      // Fallback to mock data
+      setCompanies(getMockCompanies());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Mock companies fallback
+  const getMockCompanies = () => [
+    {
+      id: 1,
+      name: "Google",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png",
+      openPositions: 42,
+      industry: "Technology"
+    },
+    {
+      id: 2,
+      name: "Microsoft",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/800px-Microsoft_logo.svg.png",
+      openPositions: 38,
+      industry: "Technology"
+    },
+    {
+      id: 3,
+      name: "Apple",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/800px-Apple_logo_black.svg.png",
+      openPositions: 35,
+      industry: "Technology"
+    }
+  ];
+
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 transition-colors duration-500">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
           <div>
@@ -62,24 +120,41 @@ const CompanyShowcase = () => {
             View all companies →
           </Link>
         </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          {companies.map(company => (
-            <Card key={company.id} className="card-hover overflow-hidden">
-              <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 bg-white rounded-md overflow-hidden border p-2 flex items-center justify-center mb-4">
-                  <img src={company.logo} alt={company.name} className="max-w-full max-h-full object-contain" />
-                </div>
-                <h3 className="font-semibold">{company.name}</h3>
-                <p className="text-sm text-muted-foreground">{company.industry}</p>
-                <p className="text-sm font-medium text-primary-purple mt-1">
-                  {company.openPositions} open positions
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+
+        {/* Company cards grid - Replaced Swiper to avoid issues */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 my-8">
+          {loading ? (
+            // Loading skeleton
+            [...Array(6)].map((_, i) => (
+              <Card key={`loading-${i}`} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 backdrop-blur-lg shadow-2xl border border-gray-200 dark:border-gray-800">
+                <CardContent className="relative p-6 flex flex-col items-center justify-center text-center z-10">
+                  <div className="animate-pulse">
+                    <div className="w-16 h-16 bg-gray-200 rounded-md mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-16"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            companies.map(company => (
+              <Card key={company.id} className="relative card-hover overflow-hidden rounded-2xl bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 backdrop-blur-lg shadow-2xl border border-gray-200 dark:border-gray-800 transition-all duration-300 hover:shadow-3xl hover:scale-[1.03] hover:border-primary-purple/60 dark:hover:border-primary-purple/80">
+                <div className="absolute inset-0 pointer-events-none rounded-2xl bg-gradient-to-br from-primary-purple/10 to-transparent opacity-60 hover:opacity-80 transition-all duration-300" />
+                <CardContent className="relative p-6 flex flex-col items-center justify-center text-center z-10">
+                  <div className="w-16 h-16 bg-white rounded-md overflow-hidden border p-2 flex items-center justify-center mb-4 shadow group-hover:shadow-lg transition-all duration-300">
+                    <img src={company.logo} alt={company.name} className="max-w-full max-h-full object-contain group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(124,58,237,0.4)] transition-all duration-300" />
+                  </div>
+                  <h3 className="font-semibold">{company.name}</h3>
+                  <p className="text-sm text-muted-foreground">{company.industry}</p>
+                  <p className="text-sm font-medium text-primary-purple mt-1">
+                    {company.openPositions} open positions
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </div>
-        
+
         <div className="mt-12">
           <Card className="overflow-hidden">
             <div className="flex flex-col lg:flex-row">

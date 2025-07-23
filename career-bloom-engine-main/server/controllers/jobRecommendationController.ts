@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import jobRecommendationService from '../jobRecommendations/jobRecommendationService';
 import { handleError } from '../utils/errorHandler';
-import { extractTextFromResume } from '../utils/resumeParser';
+import { extractSkillsFromResumeText, extractTextFromResume } from '../utils/resumeParser';
 
 // Custom interface for request with file
 interface RequestWithFile extends Request {
@@ -92,8 +92,8 @@ export const getRecommendationsFromResumeFile = async (req: Request, res: Respon
         const resumeText = await extractTextFromResume(filePath);
         console.log(`Extracted ${resumeText.length} characters from resume`);
         
-        // Extract skills from resume text
-        const skills = extractSkillsFromText(resumeText);
+        // Extract skills from resume text using improved function
+        const skills = extractSkillsFromResumeText(resumeText);
         console.log(`Extracted skills from resume: ${skills.join(', ')}`);
         
         // Get limit from query params or use default
@@ -159,23 +159,7 @@ export const getRecommendationsFromResumeFile = async (req: Request, res: Respon
   }
 };
 
-// Helper function to extract skills from text
-function extractSkillsFromText(text: string): string[] {
-  const commonSkills = [
-    "JavaScript", "TypeScript", "Python", "Java", "C#", "C++", "Ruby", "PHP", "Swift", "Go",
-    "React", "Angular", "Vue", "Node.js", "Express", "Django", "Flask", "Spring", "ASP.NET",
-    "MongoDB", "MySQL", "PostgreSQL", "SQL Server", "Oracle", "Redis", "Firebase",
-    "AWS", "Azure", "GCP", "Docker", "Kubernetes", "CI/CD", "Git", "GitHub", "GitLab",
-    "Agile", "Scrum", "Kanban", "Project Management", "Team Leadership",
-    "Machine Learning", "AI", "Data Science", "Big Data", "Data Analysis",
-    "UI/UX", "Figma", "Sketch", "Adobe XD", "Photoshop", "Illustrator"
-  ];
-  
-  const textLower = text.toLowerCase();
-  return commonSkills.filter(skill => 
-    textLower.includes(skill.toLowerCase())
-  );
-}
+
 
 /**
  * Get job recommendations based on resume text or user ID

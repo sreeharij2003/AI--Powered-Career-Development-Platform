@@ -1,27 +1,6 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 
-// Define interface for individual cover letters
-export interface ICoverLetter extends Document { // Export the interface
-  title?: string;
-  content?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  jobId?: Types.ObjectId;
-  company?: string;
-}
-
-// Define the schema for individual cover letters
-const coverLetterSchema = new Schema<ICoverLetter>({
-  title: String,
-  content: String,
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  jobId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Job',
-  },
-  company: String
-});
+// Cover letter functionality removed
 
 // Define the schema for individual resumes
 const resumeSchema = new Schema({
@@ -32,7 +11,6 @@ const resumeSchema = new Schema({
 
 // Define interface for generated content
 interface IGeneratedContent {
-    coverLetters: ICoverLetter[]; // Array of ICoverLetter
     resumes: any[]; // Define a proper interface for resumes if needed
 }
 
@@ -105,16 +83,11 @@ const userProfileSchema = new mongoose.Schema<IUserProfile>({
     resume: String, // This might be a path or reference if resumes get large
   }],
   generatedContent: {
-    coverLetters: [coverLetterSchema], // Use the defined schema
     resumes: [resumeSchema], // Use the defined schema
   }
 }, { timestamps: true }); // timestamps adds createdAt and updatedAt to the main document
 
-// Update the updatedAt field on save
-userProfileSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
-  next();
-});
+// updatedAt is automatically handled by timestamps: true
 
 // Indexes for better query performance
 userProfileSchema.index({ userId: 1 });

@@ -1,15 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { BUSINESS_QUESTIONS, CREATIVE_QUESTIONS, EDUCATION_QUESTIONS, HEALTHCARE_QUESTIONS, SCIENCE_QUESTIONS, TECHNOLOGY_QUESTIONS } from '@/data/assessmentQuestions';
 import { API } from "@/services/api";
-import { ArrowRight, Award, BookOpen, BrainCircuit, Clock, Lightbulb, Upload } from "lucide-react";
-import React, { useState } from "react";
+import { ArrowRight, Award, BookOpen, BrainCircuit, Clock, Lightbulb, Youtube } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // Career domains for assessment
@@ -52,140 +51,14 @@ const CAREER_DOMAINS = [
   }
 ];
 
-// Assessment questions by domain
-const ASSESSMENT_QUESTIONS = {
-  tech: [
-    {
-      id: "tech_1",
-      question: "How much do you enjoy solving complex logical problems?",
-      options: ["Not at all", "Somewhat", "Moderately", "Very much", "Extremely"]
-    },
-    {
-      id: "tech_2",
-      question: "How comfortable are you learning new technologies?",
-      options: ["Not comfortable", "Slightly comfortable", "Moderately comfortable", "Very comfortable", "Extremely comfortable"]
-    },
-    {
-      id: "tech_3",
-      question: "Do you prefer working with data, interfaces, or systems?",
-      options: ["Data", "Interfaces", "Systems", "A mix of them", "Not sure"]
-    },
-    {
-      id: "tech_4",
-      question: "How interested are you in understanding how things work under the hood?",
-      options: ["Not interested", "Slightly interested", "Moderately interested", "Very interested", "Extremely interested"]
-    }
-  ],
-  business: [
-    {
-      id: "business_1",
-      question: "How comfortable are you making decisions that affect others?",
-      options: ["Not comfortable", "Slightly comfortable", "Moderately comfortable", "Very comfortable", "Extremely comfortable"]
-    },
-    {
-      id: "business_2",
-      question: "Do you enjoy analyzing financial data and market trends?",
-      options: ["Not at all", "Somewhat", "Moderately", "Very much", "Extremely"]
-    },
-    {
-      id: "business_3",
-      question: "How important is leadership to you in your career?",
-      options: ["Not important", "Slightly important", "Moderately important", "Very important", "Extremely important"]
-    },
-    {
-      id: "business_4",
-      question: "Are you interested in developing business strategies?",
-      options: ["Not interested", "Slightly interested", "Moderately interested", "Very interested", "Extremely interested"]
-    }
-  ],
-  creative: [
-    {
-      id: "creative_1",
-      question: "How often do you engage in creative activities?",
-      options: ["Never", "Rarely", "Sometimes", "Often", "Very often"]
-    },
-    {
-      id: "creative_2",
-      question: "How important is artistic expression to you?",
-      options: ["Not important", "Slightly important", "Moderately important", "Very important", "Extremely important"]
-    },
-    {
-      id: "creative_3",
-      question: "Do you prefer structured or free-form creative work?",
-      options: ["Highly structured", "Somewhat structured", "Balanced", "Somewhat free-form", "Highly free-form"]
-    },
-    {
-      id: "creative_4",
-      question: "How comfortable are you receiving feedback on creative work?",
-      options: ["Not comfortable", "Slightly comfortable", "Moderately comfortable", "Very comfortable", "Extremely comfortable"]
-    }
-  ],
-  healthcare: [
-    {
-      id: "healthcare_1",
-      question: "How important is helping others directly to you?",
-      options: ["Not important", "Slightly important", "Moderately important", "Very important", "Extremely important"]
-    },
-    {
-      id: "healthcare_2",
-      question: "Are you comfortable working in high-pressure situations?",
-      options: ["Not comfortable", "Slightly comfortable", "Moderately comfortable", "Very comfortable", "Extremely comfortable"]
-    },
-    {
-      id: "healthcare_3",
-      question: "How interested are you in human biology and health?",
-      options: ["Not interested", "Slightly interested", "Moderately interested", "Very interested", "Extremely interested"]
-    },
-    {
-      id: "healthcare_4",
-      question: "Would you prefer research or direct patient care?",
-      options: ["Definitely research", "Leaning toward research", "Equal interest", "Leaning toward patient care", "Definitely patient care"]
-    }
-  ],
-  education: [
-    {
-      id: "education_1",
-      question: "How much do you enjoy explaining concepts to others?",
-      options: ["Not at all", "Somewhat", "Moderately", "Very much", "Extremely"]
-    },
-    {
-      id: "education_2",
-      question: "Are you patient when others don't understand something quickly?",
-      options: ["Not patient", "Slightly patient", "Moderately patient", "Very patient", "Extremely patient"]
-    },
-    {
-      id: "education_3",
-      question: "How important is continuous learning to you?",
-      options: ["Not important", "Slightly important", "Moderately important", "Very important", "Extremely important"]
-    },
-    {
-      id: "education_4",
-      question: "Would you prefer teaching children or adults?",
-      options: ["Definitely children", "Leaning toward children", "No preference", "Leaning toward adults", "Definitely adults"]
-    }
-  ],
-  science: [
-    {
-      id: "science_1",
-      question: "How curious are you about how the natural world works?",
-      options: ["Not curious", "Slightly curious", "Moderately curious", "Very curious", "Extremely curious"]
-    },
-    {
-      id: "science_2",
-      question: "Do you enjoy conducting experiments and analyzing results?",
-      options: ["Not at all", "Somewhat", "Moderately", "Very much", "Extremely"]
-    },
-    {
-      id: "science_3",
-      question: "How comfortable are you with mathematical concepts?",
-      options: ["Not comfortable", "Slightly comfortable", "Moderately comfortable", "Very comfortable", "Extremely comfortable"]
-    },
-    {
-      id: "science_4",
-      question: "Do you prefer theoretical or applied science?",
-      options: ["Strongly theoretical", "Somewhat theoretical", "Balanced", "Somewhat applied", "Strongly applied"]
-    }
-  ]
+// Example: dynamically load questions for selected domains
+const DOMAIN_QUESTION_MAP: Record<string, any[]> = {
+  tech: TECHNOLOGY_QUESTIONS,
+  business: BUSINESS_QUESTIONS,
+  creative: CREATIVE_QUESTIONS,
+  healthcare: HEALTHCARE_QUESTIONS,
+  education: EDUCATION_QUESTIONS,
+  science: SCIENCE_QUESTIONS,
 };
 
 // General questions about work preferences
@@ -217,6 +90,15 @@ const GENERAL_QUESTIONS = [
   }
 ];
 
+// Default options for domain questions (1-5 scale)
+const DEFAULT_DOMAIN_OPTIONS = [
+  '1 - Not interested at all',
+  '2 - Slightly interested',
+  '3 - Moderately interested',
+  '4 - Very interested',
+  '5 - Extremely interested',
+];
+
 interface CareerStep {
   year: number;
   title: string;
@@ -236,16 +118,105 @@ interface CareerPathResponse {
   recommendedRoles?: string[];
 }
 
+// Helper: Get a mixed set of 25 questions from all domains
+function getMixedAssessmentQuestions() {
+  const allDomains = [
+    TECHNOLOGY_QUESTIONS,
+    BUSINESS_QUESTIONS,
+    CREATIVE_QUESTIONS,
+    HEALTHCARE_QUESTIONS,
+    EDUCATION_QUESTIONS,
+    SCIENCE_QUESTIONS,
+  ];
+  const questions: any[] = [];
+  let i = 0;
+  // Round-robin pick one from each domain until 25 or run out
+  while (questions.length < 25) {
+    for (const domain of allDomains) {
+      if (questions.length >= 25) break;
+      if (domain[i]) questions.push(domain[i]);
+    }
+    i++;
+    if (allDomains.every(domain => !domain[i])) break; // stop if all domains exhausted
+  }
+  return questions;
+}
+
+const MIXED_QUESTIONS = getMixedAssessmentQuestions();
+
+// Helper: Get 20 representative questions from all major subdomains in the selected domain
+function getRepresentativeQuestions(domainQuestions: any[], maxQuestions = 20) {
+  // Group questions by subdomain
+  const subdomainMap: Record<string, any[]> = {};
+  for (const q of domainQuestions) {
+    if (!q.subdomain) continue;
+    if (!subdomainMap[q.subdomain]) subdomainMap[q.subdomain] = [];
+    subdomainMap[q.subdomain].push(q);
+  }
+  // Step 1: Try to pick one random question from each subdomain
+  const subdomains = Object.keys(subdomainMap);
+  let selected: any[] = [];
+  for (const sub of subdomains) {
+    const arr = subdomainMap[sub];
+    if (arr.length > 0) {
+      selected.push(arr[Math.floor(Math.random() * arr.length)]);
+    }
+    if (selected.length >= maxQuestions) break;
+  }
+  // Step 2: If fewer than maxQuestions, fill randomly from remaining questions
+  if (selected.length < maxQuestions) {
+    // Exclude already selected
+    const remaining = domainQuestions.filter(q => !selected.includes(q));
+    // Shuffle remaining
+    for (let i = remaining.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+    }
+    for (const q of remaining) {
+      if (selected.length >= maxQuestions) break;
+      selected.push(q);
+    }
+  }
+  // If more than maxQuestions (too many subdomains), trim
+  return selected.slice(0, maxQuestions);
+}
+
+
+
 const CareerPathPredictor = () => {
   const [activeTab, setActiveTab] = useState("assessment");
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [targetRole, setTargetRole] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [resumeText, setResumeText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [roadmapData, setRoadmapData] = useState<CareerPathResponse | null>(null);
   const [detectedSkills, setDetectedSkills] = useState<string[]>([]);
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [domainAssessmentQuestions, setDomainAssessmentQuestions] = useState<any[]>([]);
+  const [roadmapFields, setRoadmapFields] = useState<any[]>([]);
+  const [isRoadmapLoading, setIsRoadmapLoading] = useState(false);
+  const [roadmapError, setRoadmapError] = useState<string | null>(null);
+  const [interestedFields, setInterestedFields] = useState<string[]>([]);
+  const [isFieldsLoading, setIsFieldsLoading] = useState(false);
+  const [fieldsError, setFieldsError] = useState<string | null>(null);
+
+  // When selectedDomain changes, generate and store 20 questions for that domain
+  useEffect(() => {
+    if (selectedDomain) {
+      const domainQuestions = DOMAIN_QUESTION_MAP[selectedDomain] || [];
+      setDomainAssessmentQuestions(getRepresentativeQuestions(domainQuestions, 20));
+      setCurrentQuestionIndex(0);
+    } else {
+      setDomainAssessmentQuestions([]);
+      setCurrentQuestionIndex(0);
+    }
+  }, [selectedDomain]);
+
+  const totalAssessmentQuestions = domainAssessmentQuestions.length;
+  const currentAssessmentQuestion = domainAssessmentQuestions[currentQuestionIndex];
 
   // Calculate which questions to show based on selected domains
   const getQuestionsForStep = (step: number) => {
@@ -260,7 +231,7 @@ const CareerPathPredictor = () => {
       const domainIndex = step - 1;
       if (domainIndex < selectedDomains.length) {
         const domain = selectedDomains[domainIndex];
-        return ASSESSMENT_QUESTIONS[domain as keyof typeof ASSESSMENT_QUESTIONS] || [];
+        return DOMAIN_QUESTION_MAP[domain] || [];
       }
       return [];
     }
@@ -309,8 +280,8 @@ const CareerPathPredictor = () => {
     if (nextStep < getTotalSteps()) {
       setCurrentStep(nextStep);
     } else {
-      // Final step - generate career path
-      generateCareerPath();
+      // Final step - assessment complete
+      toast.success("Assessment completed! Switch to Resume Analysis tab to find missing skills.");
     }
   };
 
@@ -335,15 +306,54 @@ const CareerPathPredictor = () => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("File size must be less than 10MB");
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain'
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Please upload a PDF, DOC, DOCX, or TXT file");
+        return;
+      }
+
       setIsLoading(true);
       try {
-        // In a real implementation, you would send the file to the backend for parsing
-        // For now, we'll simulate skill detection
-        const mockSkills = ["JavaScript", "React", "HTML/CSS", "Git", "Responsive Design"];
-        setDetectedSkills(mockSkills);
-        toast.success("Resume analyzed successfully!");
+        // Read file content
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const content = event.target?.result as string;
+
+          if (file.type === 'text/plain') {
+            // For text files, directly use the content
+            setResumeText(content);
+          } else {
+            // For PDF/DOC files, you would typically send to backend for parsing
+            // For now, we'll simulate by setting a placeholder
+            setResumeText(`[File uploaded: ${file.name}]\n\nPlease paste your resume text below or use our parsing service.`);
+          }
+
+          // File uploaded successfully - analysis will happen when user clicks "Analyze Resume"
+          toast.success(`Resume file "${file.name}" uploaded successfully! Click "Analyze Resume" to find missing skills.`);
+        };
+
+        reader.onerror = () => {
+          toast.error("Failed to read file");
+        };
+
+        // Read as text for now (in production, you'd handle different file types appropriately)
+        reader.readAsText(file);
+
       } catch (error) {
-        toast.error("Failed to analyze resume");
+        toast.error("Failed to process resume file");
         console.error(error);
       } finally {
         setIsLoading(false);
@@ -351,77 +361,294 @@ const CareerPathPredictor = () => {
     }
   };
 
-  // Handle resume text analysis
+  // Handle resume text analysis with Lightning AI
   const handleResumeTextSubmit = async () => {
     if (resumeText.trim()) {
+      if (!jobDescription.trim()) {
+        toast.error("Please provide a job description for analysis");
+        return;
+      }
+
       setIsLoading(true);
       try {
-        // In a real implementation, you would send the text to the backend for parsing
-        // For now, we'll simulate skill detection
-        const mockSkills = ["JavaScript", "React", "HTML/CSS", "Git", "Responsive Design"];
-        setDetectedSkills(mockSkills);
-        toast.success("Resume analyzed successfully!");
+        console.log('🔍 Analyzing resume with Lightning AI...');
+
+        const response = await fetch('http://localhost:5000/api/resume/analyze-missing-skills', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            resumeText: resumeText.trim(),
+            jobDescription: jobDescription.trim()
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          console.log('✅ Lightning AI analysis successful:', data.data);
+
+          // Set the missing skills as detected skills for the career path generation
+          const missingSkills = data.data.missingSkills || [];
+          const existingSkills = data.data.existingSkills || [];
+
+          // For the career path predictor, we'll use missing skills as the skills to focus on
+          setDetectedSkills(missingSkills);
+
+          if (missingSkills.length > 0) {
+            toast.success(`Found ${missingSkills.length} missing skills that you need to develop!`);
+          } else {
+            toast.success("Great! You have all the required skills for this job.");
+          }
+
+          // Log the analysis for debugging
+          console.log('🎯 Missing skills:', missingSkills);
+          console.log('✅ Existing skills:', existingSkills);
+
+        } else {
+          console.error('❌ Lightning AI analysis failed:', data.error);
+          toast.error(data.error || "Failed to analyze resume");
+        }
       } catch (error) {
-        toast.error("Failed to analyze resume");
-        console.error(error);
+        console.error('❌ Error calling Lightning AI:', error);
+        toast.error("Failed to analyze resume. Please try again.");
       } finally {
         setIsLoading(false);
       }
+    } else {
+      toast.error("Please provide your resume text");
     }
   };
 
-  // Generate career roadmap
-  const generateCareerPath = async () => {
-    setIsLoading(true);
+
+
+  // Modern roadmap generation handler
+  const handleGenerateModernRoadmap = async () => {
+    setIsRoadmapLoading(true);
+    setRoadmapError(null);
     try {
-      // First, assess interests based on answers
-      const interestsResponse = await API.career.assessInterests(answers);
-      
-      // Use detected skills or empty array if none
-      const skills = detectedSkills.length > 0 ? detectedSkills : [];
-      
-      // If target role is not set, use the recommended role from interests assessment
-      const effectiveTargetRole = targetRole || interestsResponse.recommendedRoles[0] || "";
-      
-      // Generate career path
-      const response = await API.career.predictAndPlan(skills, effectiveTargetRole);
-      
-      // Combine the responses
-      const combinedResponse = {
-        ...response,
-        recommendedRoles: interestsResponse.recommendedRoles
-      };
-      
-      setRoadmapData(combinedResponse);
-      toast.success("Career plan generated successfully!");
-    } catch (error) {
-      toast.error("Failed to generate career plan");
-      console.error(error);
+      console.log('🎯 Generating career roadmap with assessment answers...');
+      console.log('📝 Assessment answers:', answers);
+
+      // Validate that we have answers
+      if (!answers || Object.keys(answers).length === 0) {
+        throw new Error('No assessment answers found. Please complete the assessment first.');
+      }
+
+      // Convert answers to the expected format
+      const assessmentAnswers = Object.entries(answers).map(([questionId, answer]) => ({
+        questionId,
+        answer: String(answer),
+        category: selectedDomain || 'General'
+      }));
+
+      console.log('📤 Sending assessment answers:', assessmentAnswers);
+
+      const response = await API.career.generateRoadmap(assessmentAnswers);
+      console.log('📥 Received response:', response);
+
+      if (response.success) {
+        setRoadmapFields(response.data.careers || []);
+        toast.success(`Generated roadmap for ${response.data.totalCareers} career(s)!`);
+      } else {
+        throw new Error(response.error || 'Failed to generate roadmap');
+      }
+    } catch (err: any) {
+      const errorMessage = err.message || "Failed to generate roadmap";
+      setRoadmapError(errorMessage);
+      toast.error(errorMessage);
+      console.error('❌ Roadmap generation error:', err);
     } finally {
-      setIsLoading(false);
+      setIsRoadmapLoading(false);
     }
   };
 
-  if (roadmapData) {
+  // Generate complete roadmap directly after assessment
+  const handleFinishAssessment = async () => {
+    console.log('🎯 Starting assessment completion...');
+    console.log('📝 Current answers:', answers);
+    console.log('🎯 Selected domain:', selectedDomain);
+
+    // Use the existing modern roadmap generation function
+    await handleGenerateModernRoadmap();
+  };
+
+  // Show roadmap results if we have either modern roadmap fields or legacy roadmap data
+  if (roadmapFields.length > 0 || roadmapData) {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold">{roadmapData.title}</h2>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <BookOpen className="h-6 w-6 text-blue-400" />
+              {roadmapData?.title || "Personalized Career Roadmap"}
+            </h2>
             <p className="text-muted-foreground">
-              Based on your assessment and {detectedSkills.length > 0 ? "skills" : "preferences"}
+              {roadmapData ?
+                `Based on your assessment and ${detectedSkills.length > 0 ? "skills" : "preferences"}` :
+                "AI-generated learning path with YouTube resources"
+              }
             </p>
           </div>
           <Button variant="outline" onClick={() => {
             setRoadmapData(null);
+            setRoadmapFields([]);
+            setInterestedFields([]);
             setCurrentStep(0);
             setAnswers({});
+            setSelectedDomain(null);
+            setCurrentQuestionIndex(0);
           }}>
             Start Over
           </Button>
         </div>
 
-        {roadmapData.recommendedRoles && roadmapData.recommendedRoles.length > 0 && (
+        {/* Enhanced Career Roadmaps Display */}
+        {roadmapFields.length > 0 && (
+          <div className="space-y-12">
+            {roadmapFields.map((career: any, careerIdx: number) => (
+              <Card key={careerIdx} className="p-8 rounded-3xl shadow-2xl bg-gradient-to-br from-[#1a2236] to-[#23263a] border-0">
+                {/* Career Header */}
+                <div className="mb-8 text-center">
+                  <h2 className="text-3xl font-extrabold mb-4 text-white flex items-center justify-center gap-3">
+                    <span className="inline-block w-4 h-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
+                    {career.career} Roadmap
+                    <span className="text-lg font-normal text-gray-400">({career.totalStages} Stages)</span>
+                  </h2>
+                  <p className="text-gray-300 text-lg max-w-3xl mx-auto">{career.description}</p>
+                  {career.estimatedDuration && (
+                    <div className="flex items-center justify-center gap-2 mt-4 text-blue-400">
+                      <Clock className="h-5 w-5" />
+                      <span className="font-semibold">Estimated Duration: {career.estimatedDuration}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Career Stages */}
+                <div className="space-y-8">
+                  {career.stages.map((stage: any, stageIdx: number) => (
+                    <div key={stageIdx} className="relative">
+                      <div className="flex items-start gap-6">
+                        {/* Stage Number */}
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                          {stage.stage}
+                        </div>
+
+                        {/* Stage Content */}
+                        <div className="flex-1 bg-[#2a2f47] rounded-2xl p-6 shadow-lg">
+                          <h3 className="text-2xl font-bold text-white mb-3">{stage.title}</h3>
+                          <p className="text-gray-300 text-base mb-4">{stage.description}</p>
+
+                          {/* Skills */}
+                          {stage.skills && stage.skills.length > 0 && (
+                            <div className="mb-4">
+                              <h4 className="text-sm font-semibold text-blue-400 mb-2">Key Skills:</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {stage.skills.map((skill: string, skillIdx: number) => (
+                                  <Badge
+                                    key={skillIdx}
+                                    variant="secondary"
+                                    className="text-sm px-3 py-1 bg-blue-900/30 text-blue-200 border border-blue-500/30"
+                                  >
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Learning Points */}
+                          {stage.learningPoints && stage.learningPoints.length > 0 && (
+                            <div className="mb-6">
+                              <h4 className="text-sm font-semibold text-green-400 mb-3">What You'll Learn:</h4>
+                              <ul className="space-y-2">
+                                {stage.learningPoints.map((point: string, pointIdx: number) => (
+                                  <li key={pointIdx} className="flex items-start gap-2 text-gray-300">
+                                    <span className="w-2 h-2 rounded-full bg-green-400 mt-2 flex-shrink-0" />
+                                    <span>{point}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Learning Resources */}
+                          <div className="grid md:grid-cols-2 gap-4">
+                            {/* YouTube Videos */}
+                            {stage.youtubeVideos && stage.youtubeVideos.length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
+                                  <Youtube className="h-4 w-4" />
+                                  YouTube Tutorials
+                                </h4>
+                                <div className="space-y-2">
+                                  {stage.youtubeVideos.map((video: any, videoIdx: number) => (
+                                    <a
+                                      key={videoIdx}
+                                      href={video.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="block p-3 bg-red-900/20 border border-red-500/30 rounded-lg hover:bg-red-900/30 transition-colors group"
+                                    >
+                                      <div className="flex items-center gap-2 text-red-300 group-hover:text-red-200">
+                                        <span className="text-sm font-medium truncate">{video.title}</span>
+                                        <ArrowRight className="h-3 w-3 flex-shrink-0" />
+                                      </div>
+                                      {video.duration && (
+                                        <div className="text-xs text-red-400 mt-1">{video.duration}</div>
+                                      )}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Coursera Content */}
+                            {stage.courseraContent && stage.courseraContent.length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                                  <BookOpen className="h-4 w-4" />
+                                  Coursera Courses
+                                </h4>
+                                <div className="space-y-2">
+                                  {stage.courseraContent.map((course: any, courseIdx: number) => (
+                                    <a
+                                      key={courseIdx}
+                                      href={course.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="block p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg hover:bg-blue-900/30 transition-colors group"
+                                    >
+                                      <div className="flex items-center gap-2 text-blue-300 group-hover:text-blue-200">
+                                        <span className="text-sm font-medium truncate">{course.title}</span>
+                                        <ArrowRight className="h-3 w-3 flex-shrink-0" />
+                                      </div>
+                                      {course.duration && (
+                                        <div className="text-xs text-blue-400 mt-1">{course.duration}</div>
+                                      )}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Connecting Line */}
+                      {stageIdx < career.stages.length - 1 && (
+                        <div className="absolute left-6 top-16 w-0.5 h-16 bg-gradient-to-b from-purple-500/50 to-blue-500/30" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {roadmapData && roadmapData.recommendedRoles && roadmapData.recommendedRoles.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-lg font-semibold">Recommended Career Paths</h4>
             <div className="flex flex-wrap gap-2">
@@ -432,7 +659,7 @@ const CareerPathPredictor = () => {
           </div>
         )}
 
-        {roadmapData.missingSkills && roadmapData.missingSkills.length > 0 && (
+        {roadmapData && roadmapData.missingSkills && roadmapData.missingSkills.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-lg font-semibold">Skills to Develop</h4>
             <div className="flex flex-wrap gap-2">
@@ -443,8 +670,9 @@ const CareerPathPredictor = () => {
           </div>
         )}
 
-        <div className="space-y-8">
-          {roadmapData.steps.map((step, index) => (
+        {roadmapData && roadmapData.steps && (
+          <div className="space-y-8">
+            {roadmapData.steps.map((step, index) => (
             <div key={index} className="relative pl-8 pb-8 border-l border-muted last:border-0">
               <div className="absolute left-0 top-0 w-6 h-6 rounded-full bg-primary -translate-x-[13px] flex items-center justify-center text-xs text-white font-medium">
                 {index + 1}
@@ -493,10 +721,11 @@ const CareerPathPredictor = () => {
                 )}
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {roadmapData.learningModules && roadmapData.learningModules.length > 0 && (
+        {roadmapData && roadmapData.learningModules && roadmapData.learningModules.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-lg font-semibold">Suggested Learning Modules</h4>
             <div className="grid gap-4 md:grid-cols-2">
@@ -518,6 +747,10 @@ const CareerPathPredictor = () => {
             </div>
           </div>
         )}
+
+
+
+
       </div>
     );
   }
@@ -538,173 +771,263 @@ const CareerPathPredictor = () => {
         </TabsList>
 
         <TabsContent value="assessment" className="space-y-6 pt-4">
-          <Card className="p-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">{getCurrentStepTitle()}</h3>
-              <Progress value={(currentStep / (getTotalSteps() - 1)) * 100} className="h-2" />
-              <p className="text-sm text-muted-foreground mt-2">
-                Step {currentStep + 1} of {getTotalSteps()}
+          <Card className="p-8 rounded-2xl shadow-xl bg-gradient-to-br from-[#181c2b] to-[#23263a] border-0">
+            <div className="mb-8">
+              <h3 className="text-2xl font-extrabold mb-2 text-white tracking-tight flex items-center gap-2">
+                <span>Career Interest Assessment</span>
+              </h3>
+              <div className="w-full h-3 bg-[#23263a] rounded-full overflow-hidden mb-2">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 transition-all duration-500"
+                  style={{ width: `${selectedDomain ? ((currentQuestionIndex + 1) / totalAssessmentQuestions) * 100 : 0}%` }}
+                />
+              </div>
+              <p className="text-base text-gray-400 mt-2 font-medium">
+                {selectedDomain ? `Question ${currentQuestionIndex + 1} of ${totalAssessmentQuestions}` : 'Select a domain to begin'}
               </p>
             </div>
-
-            {currentStep === 0 ? (
-              <div className="space-y-4">
-                <p>Select the career domains you're interested in exploring (choose at least one):</p>
-                <div className="grid gap-4 md:grid-cols-2">
+            {!selectedDomain ? (
+              <div className="space-y-6">
+                <p className="text-lg text-gray-200">Select the career domain you're interested in exploring:</p>
+                <div className="grid gap-6 md:grid-cols-2">
                   {CAREER_DOMAINS.map(domain => (
-                    <div 
-                      key={domain.id} 
-                      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                        selectedDomains.includes(domain.id) 
-                          ? 'border-primary bg-primary/5' 
-                          : 'hover:border-muted-foreground'
-                      }`}
-                      onClick={() => handleDomainToggle(domain.id)}
+                    <div
+                      key={domain.id}
+                      className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-lg hover:border-blue-500 bg-[#23263a] hover:bg-[#23263a]/80 ${selectedDomain === domain.id ? 'border-blue-500 ring-2 ring-blue-400/30' : 'border-gray-700'}`}
+                      onClick={() => setSelectedDomain(domain.id)}
                     >
-                      <div className="flex items-center gap-2">
-                        <div className={`${selectedDomains.includes(domain.id) ? 'text-primary' : 'text-muted-foreground'}`}>
+                      <div className="flex items-center gap-3">
+                        <div className={selectedDomain === domain.id ? 'text-blue-400' : 'text-gray-400'}>
                           {domain.icon}
                         </div>
-                        <h4 className="font-medium">{domain.name}</h4>
+                        <h4 className="font-semibold text-lg text-white">{domain.name}</h4>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">{domain.description}</p>
+                      <p className="text-sm text-gray-400 mt-2">{domain.description}</p>
                     </div>
                   ))}
                 </div>
               </div>
+            ) : currentAssessmentQuestion ? (
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-xl text-white mb-2">{currentAssessmentQuestion.question}</h4>
+                  <RadioGroup
+                    value={answers[currentAssessmentQuestion.id] || ""}
+                    onValueChange={(value) => handleAnswerChange(currentAssessmentQuestion.id, value)}
+                  >
+                    <div className="space-y-4">
+                      {(currentAssessmentQuestion.options || DEFAULT_DOMAIN_OPTIONS).map((option, optIndex) => (
+                        <label key={optIndex} className="flex items-center gap-4 cursor-pointer group">
+                          <span className="relative flex items-center justify-center">
+                            <input
+                              type="radio"
+                              className="appearance-none w-6 h-6 rounded-full border-2 border-gray-500 checked:border-blue-500 checked:bg-blue-500 transition-all duration-200 focus:ring-2 focus:ring-blue-400 group-hover:border-blue-400"
+                              checked={answers[currentAssessmentQuestion.id] === option}
+                              onChange={() => handleAnswerChange(currentAssessmentQuestion.id, option)}
+                            />
+                            {answers[currentAssessmentQuestion.id] === option && (
+                              <span className="absolute w-3 h-3 bg-white rounded-full pointer-events-none" />
+                            )}
+                          </span>
+                          <span className="text-lg text-gray-200 group-hover:text-blue-400 transition-colors">{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </RadioGroup>
+                </div>
+              </div>
             ) : (
-              <div className="space-y-6">
-                {getQuestionsForStep(currentStep).map((question, index) => (
-                  <div key={question.id} className="space-y-3">
-                    <h4 className="font-medium">{question.question}</h4>
-                    <RadioGroup 
-                      value={answers[question.id] || ""}
-                      onValueChange={(value) => handleAnswerChange(question.id, value)}
-                    >
-                      <div className="space-y-2">
-                        {question.options.map((option, optIndex) => (
-                          <div key={optIndex} className="flex items-center space-x-2">
-                            <RadioGroupItem value={option} id={`${question.id}-${optIndex}`} />
-                            <Label htmlFor={`${question.id}-${optIndex}`}>{option}</Label>
-                          </div>
-                        ))}
-                      </div>
-                    </RadioGroup>
-                  </div>
-                ))}
+              <div className="text-center text-gray-400 py-8 text-lg">
+                No questions available for the selected domain.
               </div>
             )}
-
-            <div className="flex justify-between mt-8">
-              <Button 
-                variant="outline" 
-                onClick={handlePreviousStep}
-                disabled={currentStep === 0}
+            <div className="flex justify-between mt-10 gap-4">
+              <Button
+                variant="outline"
+                className="rounded-full px-6 py-2 text-base font-semibold border-gray-600 bg-[#23263a] text-gray-300 hover:bg-gray-800 hover:text-white transition-all"
+                onClick={() => {
+                  if (!selectedDomain) return;
+                  setCurrentQuestionIndex(idx => Math.max(0, idx - 1));
+                }}
+                disabled={!selectedDomain || currentQuestionIndex === 0}
               >
                 Previous
               </Button>
-              <Button 
-                onClick={handleNextStep}
-                disabled={isNextButtonDisabled()}
+              <Button
+                className="rounded-full px-8 py-2 text-base font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:from-purple-600 hover:to-blue-600 transition-all"
+                onClick={() => {
+                  if (!selectedDomain) return;
+                  if (currentQuestionIndex < totalAssessmentQuestions - 1) {
+                    setCurrentQuestionIndex(idx => idx + 1);
+                  } else {
+                    handleFinishAssessment();
+                  }
+                }}
+                disabled={!selectedDomain || !answers[currentAssessmentQuestion?.id] || isRoadmapLoading}
               >
-                {currentStep === getTotalSteps() - 1 ? "Generate Career Path" : "Next"}
+                {selectedDomain && currentQuestionIndex === totalAssessmentQuestions - 1 ? (isRoadmapLoading ? "Generating Roadmap..." : "Generate Roadmap") : "Next"}
+              </Button>
+              <Button
+                variant="ghost"
+                className="rounded-full px-6 py-2 text-base font-semibold text-gray-400 hover:text-red-400 transition-all"
+                onClick={() => {
+                  setSelectedDomain(null);
+                  setCurrentQuestionIndex(0);
+                  setAnswers({});
+                }}
+                disabled={!selectedDomain}
+              >
+                Start Over
               </Button>
             </div>
+            {fieldsError && <div className="text-red-400 text-center mt-4">{fieldsError}</div>}
+            {roadmapError && <div className="text-red-400 text-center mt-4">{roadmapError}</div>}
           </Card>
         </TabsContent>
 
         <TabsContent value="resume" className="space-y-6 pt-4">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <Tabs defaultValue="upload" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="upload">Upload Resume</TabsTrigger>
-                  <TabsTrigger value="paste">Paste Resume</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="upload" className="space-y-4 pt-4">
-                  <Card className="border-dashed border-2 py-8 flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors">
-                    <Input 
-                      type="file" 
-                      id="resume-upload" 
-                      className="hidden" 
-                      onChange={handleFileUpload}
-                      accept=".pdf,.doc,.docx"
-                    />
-                    <Label htmlFor="resume-upload" className="cursor-pointer">
-                      <div className="flex flex-col items-center gap-2">
-                        <Upload className="h-10 w-10 text-muted-foreground" />
-                        <p className="font-medium">Click to upload your resume</p>
-                        <p className="text-xs text-muted-foreground">
-                          Supports PDF, DOC, DOCX files
-                        </p>
-                      </div>
-                    </Label>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="paste" className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="resume-text">Paste your resume text</Label>
-                    <Textarea 
-                      id="resume-text" 
-                      value={resumeText}
-                      onChange={(e) => setResumeText(e.target.value)}
-                      placeholder="Paste the content of your resume here..."
-                      className="min-h-[200px]"
-                    />
-                  </div>
-                  <Button onClick={handleResumeTextSubmit} disabled={!resumeText.trim() || isLoading}>
-                    {isLoading ? "Analyzing..." : "Analyze Resume"}
-                  </Button>
-                </TabsContent>
-              </Tabs>
-            </div>
-
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="target-role">Target Role (Optional)</Label>
-                <Input 
-                  id="target-role" 
-                  value={targetRole} 
-                  onChange={(e) => setTargetRole(e.target.value)}
-                  placeholder="e.g., Senior Frontend Developer, Full Stack Engineer"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Leave blank to get recommendations based on your skills
+          <div className="max-w-4xl mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BrainCircuit className="h-5 w-5" />
+                  Resume Analysis
+                </CardTitle>
+                <p className="text-muted-foreground">
+                  Provide your resume and job description to get personalized career insights
                 </p>
-              </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2">
+                  {/* Resume Input */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Your Resume</Label>
 
-              <div className="space-y-2">
-                <Label>Detected Skills</Label>
-                <div className="min-h-[100px] border rounded-md p-4 bg-muted/30">
-                  {isLoading ? (
-                    <div className="flex flex-col items-center justify-center h-full gap-2">
-                      <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                      <p className="text-sm text-muted-foreground">Analyzing your resume...</p>
+                      {/* Upload Option */}
+                      <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors">
+                        <input
+                          type="file"
+                          id="resume-upload"
+                          className="hidden"
+                          accept=".pdf,.doc,.docx,.txt"
+                          onChange={handleFileUpload}
+                        />
+                        <Label htmlFor="resume-upload" className="cursor-pointer">
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                              <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium">Upload Resume File</p>
+                              <p className="text-xs text-muted-foreground">
+                                PDF, DOC, DOCX, TXT (Max 10MB)
+                              </p>
+                            </div>
+                          </div>
+                        </Label>
+                      </div>
+
+                      <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-background px-2 text-muted-foreground">Or paste text</span>
+                        </div>
+                      </div>
+
+                      {/* Text Input Option */}
+                      <Textarea
+                        id="resume-text"
+                        value={resumeText}
+                        onChange={(e) => setResumeText(e.target.value)}
+                        placeholder="Paste the content of your resume here..."
+                        className="min-h-[200px] resize-none"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Upload a file or copy and paste your complete resume text
+                      </p>
                     </div>
-                  ) : detectedSkills.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {detectedSkills.map((skill, index) => (
-                        <Badge key={index} variant="secondary">{skill}</Badge>
-                      ))}
+                  </div>
+
+                  {/* Job Description Input */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="job-description">Job Description</Label>
+                      <Textarea
+                        id="job-description"
+                        value={jobDescription}
+                        onChange={(e) => setJobDescription(e.target.value)}
+                        placeholder="Paste the job description you're interested in..."
+                        className="min-h-[300px] resize-none"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Include the complete job posting with requirements and responsibilities
+                      </p>
                     </div>
-                  ) : (
+                  </div>
+                </div>
+
+                {/* Analysis Results */}
+                {detectedSkills.length > 0 && (
+                  <div className="space-y-4 pt-4 border-t">
+                    {detectedSkills.length > 0 ? (
+                      <div className="space-y-2">
+                        <Label className="text-orange-400 font-semibold">⚠️ Missing Skills (Skills you need to develop for this job)</Label>
+                        <div className="border rounded-md p-4 bg-orange-50/10 border-orange-200/20">
+                          <div className="flex flex-wrap gap-2">
+                            {detectedSkills.map((skill, index) => (
+                              <Badge key={index} variant="destructive" className="bg-orange-100 text-orange-800 hover:bg-orange-200">
+                                {skill}
+                              </Badge>
+                            ))}
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-3">
+                            💡 Focus on learning these skills to improve your chances for this position
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label className="text-green-400 font-semibold">✅ Great Match!</Label>
+                        <div className="border rounded-md p-4 bg-green-50/10 border-green-200/20">
+                          <p className="text-sm text-muted-foreground">
+                            🎉 Excellent news! Your resume shows you have the skills needed for this position. You appear to be a strong candidate for this role.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Action Button */}
+                <div className="flex flex-col items-center pt-4 space-y-2">
+                  <Button
+                    onClick={handleResumeTextSubmit}
+                    disabled={!resumeText.trim() || !jobDescription.trim() || isLoading}
+                    className="w-full max-w-md"
+                    size="lg"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Analyzing with AI...
+                      </>
+                    ) : (
+                      "🔍 Analyze Resume & Find Missing Skills"
+                    )}
+                  </Button>
+                  {(!resumeText.trim() || !jobDescription.trim()) && !isLoading && (
                     <p className="text-sm text-muted-foreground text-center">
-                      No skills detected yet. Please upload or paste your resume.
+                      Please provide both your resume and job description to analyze missing skills
                     </p>
                   )}
                 </div>
-              </div>
-
-              <Button 
-                className="w-full" 
-                onClick={generateCareerPath}
-                disabled={detectedSkills.length === 0 || isLoading}
-              >
-                {isLoading ? "Generating..." : "Generate Career Roadmap"}
-              </Button>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
       </Tabs>
@@ -712,4 +1035,4 @@ const CareerPathPredictor = () => {
   );
 };
 
-export default CareerPathPredictor; 
+export default CareerPathPredictor;

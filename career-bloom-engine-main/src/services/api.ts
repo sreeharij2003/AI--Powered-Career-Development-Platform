@@ -80,17 +80,32 @@ export const API = {
     },
     predictAndPlan: async (skills: string[], targetRole?: string) => {
       const headers = await createAuthHeaders();
-      
+
       const response = await fetch(`${API_BASE_URL}/career/predict-and-plan`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ skills, targetRole }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to predict career path');
       }
-      
+
+      return response.json();
+    },
+    generateRoadmap: async (assessmentAnswers: any[]) => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/career-path/roadmap`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ answers: assessmentAnswers }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate career roadmap');
+      }
+
       return response.json();
     },
     assessInterests: async (answers: Record<string, any>) => {
@@ -224,16 +239,32 @@ export const API = {
     },
     deleteResume: async () => {
       const headers = await createAuthHeaders();
-      
+
       const response = await fetch(`${API_BASE_URL}/user/resume`, {
         method: 'DELETE',
         headers,
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to delete resume');
       }
-      
+
+      return response.json();
+    },
+    getResumeText: async () => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/user/resume/text`, {
+        headers,
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null; // No resume found
+        }
+        throw new Error('Failed to get resume text');
+      }
+
       return response.json();
     },
     parseResume: async (fileId: string) => {
@@ -248,6 +279,138 @@ export const API = {
         throw new Error('Failed to parse resume');
       }
       
+      return response.json();
+    }
+  },
+  companies: {
+    // Get trending/popular companies
+    getTrending: async (limit: number = 12) => {
+      const response = await fetch(`${API_BASE_URL}/companies/trending?limit=${limit}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch trending companies');
+      }
+
+      return response.json();
+    },
+
+    // Search companies with filters
+    search: async (query?: string, location?: string, industry?: string, limit: number = 20) => {
+      const params = new URLSearchParams();
+      if (query) params.append('query', query);
+      if (location) params.append('location', location);
+      if (industry) params.append('industry', industry);
+      params.append('limit', limit.toString());
+
+      const response = await fetch(`${API_BASE_URL}/companies/search?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to search companies');
+      }
+
+      return response.json();
+    },
+
+    // Get all companies (alias for trending)
+    getAll: async (limit: number = 20) => {
+      const response = await fetch(`${API_BASE_URL}/companies?limit=${limit}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch companies');
+      }
+
+      return response.json();
+    },
+
+    // Get company by ID
+    getById: async (id: string) => {
+      const response = await fetch(`${API_BASE_URL}/companies/${id}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch company details');
+      }
+
+      return response.json();
+    }
+  },
+  resumeBuilder: {
+    // Get all resumes for the user
+    getResumes: async () => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/resumes`, {
+        headers,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch resumes');
+      }
+
+      return response.json();
+    },
+
+    // Get a specific resume by ID
+    getResumeById: async (id: string) => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/resumes/${id}`, {
+        headers,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch resume');
+      }
+
+      return response.json();
+    },
+
+    // Save/create a new resume
+    saveResume: async (resumeData: any) => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/resumes`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(resumeData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save resume');
+      }
+
+      return response.json();
+    },
+
+    // Update an existing resume
+    updateResume: async (id: string, resumeData: any) => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/resumes/${id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(resumeData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update resume');
+      }
+
+      return response.json();
+    },
+
+    // Delete a resume
+    deleteResume: async (id: string) => {
+      const headers = await createAuthHeaders();
+
+      const response = await fetch(`${API_BASE_URL}/resumes/${id}`, {
+        method: 'DELETE',
+        headers,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete resume');
+      }
+
       return response.json();
     }
   }

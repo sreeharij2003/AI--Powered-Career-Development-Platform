@@ -20,7 +20,7 @@ class ChatbotController {
 
   handleQuery = async (req: Request, res: Response) => {
     try {
-      const { query } = req.body;
+      const { query, job, resumeText } = req.body;
 
       if (!query) {
         return res.status(400).json({ 
@@ -29,7 +29,7 @@ class ChatbotController {
         });
       }
 
-      const response = await this.chatbotService.processUserQuery(query);
+      const response = await this.chatbotService.processUserQuery(query, job, resumeText);
       res.json({ 
         success: true,
         response,
@@ -47,7 +47,7 @@ class ChatbotController {
   // New endpoint to test LLM integration
   testLLM = async (req: Request, res: Response) => {
     try {
-      const { query } = req.body;
+      const { query, job, resumeText } = req.body;
 
       if (!query) {
         return res.status(400).json({ 
@@ -57,7 +57,7 @@ class ChatbotController {
       }
 
       // Force LLM usage for testing
-      const response = await this.chatbotService.processUserQuery(query);
+      const response = await this.chatbotService.processUserQuery(query, job, resumeText);
       
       res.json({ 
         success: true,

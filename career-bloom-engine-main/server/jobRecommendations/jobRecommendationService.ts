@@ -1,5 +1,10 @@
+import axios from 'axios';
 import jobService from '../services/jobService';
+import { extractSkillsFromResumeText } from '../utils/resumeParser';
 import JobVectorStore from './jobVectorStore';
+
+const JSEARCH_API_KEY = '38f988da28msh1698b0a89a1a354p1d4711jsn2bc53cbaadc6';
+const JSEARCH_API_URL = 'https://jsearch.p.rapidapi.com/search';
 
 class JobRecommendationService {
   private vectorStore: JobVectorStore;
@@ -233,6 +238,166 @@ class JobRecommendationService {
         match
       };
     });
+  }
+
+  /**
+   * Fetch jobs from JSearch API, store them in the database, and return the jobs
+   */
+  async fetchAndStoreJSearchJobs(query: string, location: string = '', limit: number = 10) {
+    try {
+      console.log(`[JSearch] Starting API call with query: "${query}", location: "${location}", limit: ${limit}`);
+      console.log(`[JSearch] API Key: ${JSEARCH_API_KEY.substring(0, 10)}...`);
+      console.log(`[JSearch] API URL: ${JSEARCH_API_URL}`);
+
+      const response = await axios.get(JSEARCH_API_URL, {
+        params: {
+          query: `${query} ${location}`.trim(),
+          page: 1,
+          num_pages: 1
+        },
+        headers: {
+          'X-RapidAPI-Key': JSEARCH_API_KEY,
+          'X-RapidAPI-Host': 'jsearch.p.rapidapi.com'
+        }
+      });
+
+      console.log(`[JSearch] API Response Status: ${response.status}`);
+      console.log(`[JSearch] API Response Data Keys:`, Object.keys(response.data || {}));
+      console.log(`[JSearch] API Response Data:`, JSON.stringify(response.data, null, 2));
+      const jobs = response.data.data || [];
+      console.log(`[JSearch] Found ${jobs.length} jobs from API`);
+      const savedJobs = [];
+      for (const job of jobs.slice(0, limit)) {
+        console.log(`[JSearch] Processing job: ${job.job_title} at ${job.employer_name}`);
+        // Map JSearch job fields to our DB schema
+        const description = job.job_description || (job.job_highlights ? job.job_highlights.join('\n') : '');
+
+        // Extract skills from job description using our skill extraction function
+        const extractedSkills = extractSkillsFromResumeText(description);
+        const providedSkills = job.job_required_skills ? job.job_required_skills.split(',').map((s: string) => s.trim()) : [];
+        const allSkills = [...new Set([...extractedSkills, ...providedSkills])]; // Combine and deduplicate
+
+        const jobData = {
+          title: job.job_title || job.title || '',
+          company: job.employer_name || job.company_name || '',
+          location: job.job_city ? `${job.job_city}, ${job.job_state || job.job_country || ''}` : (job.job_country || ''),
+          description: description,
+          salary: job.job_min_salary && job.job_max_salary ? `$${job.job_min_salary}-$${job.job_max_salary} ${job.job_salary_currency || 'USD'}` : '',
+          remote: job.job_is_remote || false,
+          type: job.job_employment_type || 'Full-time',
+          experience_level: job.job_experience_level || this.inferExperienceLevel(description),
+          skills: allSkills,
+          requirements: job.job_required_qualifications ? job.job_required_qualifications.split(',').map((r: string) => r.trim()) : [],
+          posted_date: job.job_posted_at_datetime_utc ? new Date(job.job_posted_at_datetime_utc) : new Date(),
+          is_active: true,
+          source: 'jsearch',
+          url: job.job_apply_link || job.job_google_link || job.job_url || job.url || ''
+        };
+        console.log(`[JSearch] Mapped job data:`, {
+          title: jobData.title,
+          company: jobData.company,
+          location: jobData.location,
+          url: jobData.url,
+          posted_date: jobData.posted_date
+        });
+        // Check for existing job using multiple criteria for better deduplication
+        console.log(`[JSearch] Checking for existing job: ${jobData.title} at ${jobData.company}`);
+        try {
+          // Check for duplicates using URL, or title+company combination
+          const existingJob = await this.findExistingJob(jobData);
+
+          if (!existingJob) {
+            console.log(`[JSearch] Creating new job: ${jobData.title}`);
+            const saved = await jobService.createJob(jobData);
+            savedJobs.push(saved);
+            console.log(`[JSearch] Successfully saved job: ${saved.title} with ID: ${saved._id}`);
+          } else {
+            console.log(`[JSearch] Job already exists, using existing: ${existingJob.title}`);
+            savedJobs.push(existingJob);
+          }
+        } catch (error: any) {
+          console.error(`[JSearch] Error processing job: ${error?.message || error}`);
+          // If processing fails, continue with next job
+        }
+      }
+      // Add all saved jobs to the vector store for recommendations
+      await this.addJobs(savedJobs);
+      console.log(`[VectorStore] Added ${savedJobs.length} jobs to the vector store. Titles:`, savedJobs.map(j => j.title).join(', '));
+      return savedJobs;
+    } catch (error: any) {
+      console.error('[JSearch] Error fetching or saving jobs from JSearch API:');
+      console.error('[JSearch] Error details:', error?.message || error);
+      if (error?.response) {
+        console.error('[JSearch] Response status:', error.response.status);
+        console.error('[JSearch] Response data:', error.response.data);
+      }
+      console.log('[JSearch] Falling back to empty array');
+      return [];
+    }
+  }
+
+  /**
+   * Find existing job to avoid duplicates
+   */
+  private async findExistingJob(jobData: any): Promise<any | null> {
+    try {
+      // First try to find by URL (most reliable)
+      if (jobData.url) {
+        const existingByUrl = await jobService.getJobs({ url: jobData.url }, 1, 1);
+        if (existingByUrl.jobs && existingByUrl.jobs.length > 0) {
+          return existingByUrl.jobs[0];
+        }
+      }
+
+      // Then try to find by title + company combination
+      const existingByTitleCompany = await jobService.getJobs({
+        title: jobData.title,
+        company: jobData.company
+      }, 1, 1);
+
+      if (existingByTitleCompany.jobs && existingByTitleCompany.jobs.length > 0) {
+        // Check if it's a recent posting (within last 30 days) to avoid very old duplicates
+        const existingJob = existingByTitleCompany.jobs[0];
+        const daysDiff = Math.abs(new Date().getTime() - new Date(existingJob.posted_date).getTime()) / (1000 * 60 * 60 * 24);
+        if (daysDiff <= 30) {
+          return existingJob;
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error finding existing job:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Infer experience level from job description
+   */
+  private inferExperienceLevel(description: string): string {
+    const descLower = description.toLowerCase();
+
+    // Look for explicit experience requirements
+    if (descLower.includes('senior') || descLower.includes('lead') || descLower.includes('principal') ||
+        descLower.includes('architect') || descLower.includes('staff')) {
+      return 'Senior';
+    }
+
+    if (descLower.includes('junior') || descLower.includes('entry') || descLower.includes('graduate') ||
+        descLower.includes('intern') || descLower.includes('trainee')) {
+      return 'Entry-level';
+    }
+
+    // Look for years of experience
+    const experienceMatch = descLower.match(/(\d+)\+?\s*years?\s*(?:of\s*)?experience/);
+    if (experienceMatch) {
+      const years = parseInt(experienceMatch[1]);
+      if (years >= 5) return 'Senior';
+      if (years >= 2) return 'Mid-level';
+      return 'Entry-level';
+    }
+
+    return 'Mid-level'; // Default
   }
 }
 

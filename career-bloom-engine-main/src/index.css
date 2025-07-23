@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Prevent horizontal overflow */
+  .prevent-overflow {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Job card specific utilities */
+  .job-card-container {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .job-title-text {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
 @layer base {
   :root {
     --background: 240 50% 99%;

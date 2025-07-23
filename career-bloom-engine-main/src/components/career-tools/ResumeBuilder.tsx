@@ -5,49 +5,94 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle2, FileText, Plus, Trash2 } from "lucide-react";
+import {
+    FileText,
+    Plus,
+    Trash2
+} from "lucide-react";
 import { useState } from "react";
 
+interface Resume {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  template: 'modern' | 'classic' | 'creative';
+}
+
+interface PersonalInfo {
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  address: string;
+  phone: string;
+  email: string;
+}
+
+interface WorkExperience {
+  id: string;
+  jobTitle: string;
+  company: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  description: string;
+}
+
+interface Education {
+  id: string;
+  degree: string;
+  institution: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  gpa?: string;
+}
+
+interface Skill {
+  id: string;
+  name: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+}
+
 const ResumeBuilder = () => {
-  const [activeTab, setActiveTab] = useState("personal");
-  const [resumePreview, setResumePreview] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  
-  // Form state
-  const [personalInfo, setPersonalInfo] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
-    portfolio: "",
-    linkedin: ""
+  const [resumes, setResumes] = useState<Resume[]>([
+    {
+      id: '1',
+      title: 'My First Resume',
+      createdAt: '2024-01-15',
+      updatedAt: '2024-01-20',
+      template: 'modern'
+    },
+    {
+      id: '2',
+      title: 'Full Stack developer',
+      createdAt: '2024-01-10',
+      updatedAt: '2024-01-18',
+      template: 'classic'
+    }
+  ]);
+
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [newResumeTitle, setNewResumeTitle] = useState('');
+  const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
+  const [currentStep, setCurrentStep] = useState<'list' | 'builder'>('list');
+  const [activeTab, setActiveTab] = useState('personal');
+
+  // Form states for resume builder
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    address: '',
+    phone: '',
+    email: ''
   });
-  
-  const [workExperience, setWorkExperience] = useState([
-    { 
-      title: "", 
-      company: "", 
-      location: "", 
-      startDate: "", 
-      endDate: "", 
-      current: false,
-      description: "" 
-    }
-  ]);
-  
-  const [education, setEducation] = useState([
-    { 
-      degree: "", 
-      institution: "", 
-      location: "", 
-      startDate: "", 
-      endDate: "", 
-      gpa: "",
-      description: "" 
-    }
-  ]);
-  
-  const [skills, setSkills] = useState<string[]>([]);
+
+  const [workExperience, setWorkExperience] = useState<WorkExperience[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [newSkill, setNewSkill] = useState("");
 
   const addWorkExperience = () => {

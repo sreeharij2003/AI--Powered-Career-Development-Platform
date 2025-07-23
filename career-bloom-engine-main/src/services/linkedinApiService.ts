@@ -1,7 +1,8 @@
 import { JobListing } from "@/types/jobs";
 
-// LinkedIn Jobs Search API response format
-// The actual response may have different field names, so we'll handle that in the code
+// This service is now deprecated - job fetching is handled by the backend
+// Keeping only mock data and utility functions for backward compatibility
+
 interface LinkedInJob {
   job_id?: string;
   id?: string;
@@ -22,7 +23,7 @@ interface LinkedInJob {
   salary_range?: string;
   salary?: string;
   skills?: string[];
-  [key: string]: any; // Allow any other fields
+  [key: string]: any;
 }
 
 // Mock data to use when API is not available
@@ -89,93 +90,18 @@ const mockLinkedInJobs = [
   }
 ];
 
+// Simplified service - API calls now handled by backend
 class LinkedInApiService {
-  private apiKey: string = '';
-  private baseUrl: string = 'https://jsearch.p.rapidapi.com';
-  private useMockData: boolean = false;
-  
+  // Deprecated: API calls are now handled by the backend
   setApiKey(key: string) {
-    this.apiKey = key;
-    console.log('LinkedIn API key set:', key.substring(0, 5) + '...');
+    console.log('LinkedInApiService.setApiKey is deprecated - API calls now handled by backend');
   }
   
+  // Deprecated: Job search is now handled by the backend
   async searchJobs(query: string, location: string = ''): Promise<{ jobs: LinkedInJob[] }> {
-    try {
-      // If we're already using mock data, don't attempt API call
-      if (this.useMockData) {
-        console.log('Using mock data (API not available)');
-        return this.getMockJobsResponse(query, location);
-      }
-      
-      console.log(`Searching LinkedIn jobs with query: ${query}, location: ${location}`);
-      
-      // Format the query for JSearch API
-      const encodedQuery = encodeURIComponent(`${query} ${location}`.trim());
-      const apiUrl = `${this.baseUrl}/search?query=${encodedQuery}&page=1&num_pages=1`;
-      
-      console.log('Making request to:', apiUrl);
-      
-      const options = {
-        method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': this.apiKey,
-          'X-RapidAPI-Host': 'jsearch.p.rapidapi.com'
-        }
-      };
-      
-      const response = await fetch(apiUrl, options);
-      
-      console.log('Response status:', response.status, response.statusText);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API error response:', errorText);
-        
-        // Fall back to mock data on API error
-        this.useMockData = true;
-        console.log('API error. Switching to mock data.');
-        return this.getMockJobsResponse(query, location);
-      }
-      
-      // Parse the API response
-      const data = await response.json();
-      
-      console.log('API response structure:', Object.keys(data));
-      
-      // Check if we have valid data
-      if (data.data && Array.isArray(data.data)) {
-        console.log(`Successfully fetched ${data.data.length} jobs from JSearch API`);
-        
-        // Convert JSearch API format to our expected format
-        const jobs = data.data.map(job => ({
-          job_id: job.job_id || String(Math.floor(Math.random() * 100000)),
-          title: job.job_title || job.title || '',
-          company_name: job.employer_name || job.company_name || '',
-          location: job.job_city ? `${job.job_city}, ${job.job_state || job.job_country || ''}` : (job.job_country || ''),
-          job_url: job.job_apply_link || job.job_google_link || '',
-          posted_date: job.job_posted_at_datetime_utc || '',
-          description: job.job_description || job.job_highlights?.join('\n') || '',
-          company_logo_url: job.employer_logo || '',
-          employment_type: job.job_employment_type || '',
-          salary_range: job.job_min_salary && job.job_max_salary ? 
-            `$${job.job_min_salary}-$${job.job_max_salary} ${job.job_salary_currency || 'USD'}` : '',
-          skills: job.job_required_skills ? job.job_required_skills.split(',') : []
-        }));
-        
-        return { jobs };
-      } else {
-        console.log('API returned unexpected format, falling back to mock data');
-        this.useMockData = true;
-        return this.getMockJobsResponse(query, location);
-      }
-    } catch (error) {
-      console.error('Error searching jobs:', error);
-      
-      // Fall back to mock data on any error
-      console.log('Falling back to mock data due to error');
-      this.useMockData = true;
-      return this.getMockJobsResponse(query, location);
-    }
+    console.log('LinkedInApiService.searchJobs is deprecated - job search now handled by backend');
+    console.log('Returning mock data for backward compatibility');
+    return this.getMockJobsResponse(query, location);
   }
   
   // Get filtered mock data based on search query

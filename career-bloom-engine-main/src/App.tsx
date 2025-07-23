@@ -10,9 +10,10 @@ import {
     SignUp as ClerkSignUp
 } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { Chatbot } from './components/Chatbot';
+import { Chatbot, ChatbotRef } from './components/Chatbot';
+import ApiKeyInitializer from './components/jobs/ApiKeyInitializer';
 import { ClerkAuthProvider, useClerkAuthContext } from "./contexts/ClerkAuthContext";
 import Companies from "./pages/Companies";
 import Dashboard from "./pages/Dashboard";
@@ -35,10 +36,10 @@ const queryClient = new QueryClient({
 const clerkAppearance = {
   baseTheme: undefined,
   elements: {
-    formButtonPrimary: 
+    formButtonPrimary:
       "bg-primary text-primary-foreground hover:bg-primary/90 rounded-md",
     card: "bg-background shadow-md rounded-lg border border-border",
-    formFieldInput: 
+    formFieldInput:
       "border border-input bg-background px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-primary",
     footerActionLink: "text-primary hover:text-primary/90",
     headerTitle: "text-2xl font-bold",
@@ -65,7 +66,7 @@ const clerkAppearance = {
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useClerkAuthContext();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       navigate('/signin');
@@ -92,10 +93,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const CenteredSignIn = () => (
   <AuthLayout title="Welcome Back">
     <div className="w-full p-4">
-      <ClerkSignIn 
-        routing="path" 
-        path="/signin" 
-        signUpUrl="/signup" 
+      <ClerkSignIn
+        routing="path"
+        path="/signin"
+        signUpUrl="/signup"
       />
     </div>
   </AuthLayout>
@@ -104,9 +105,9 @@ const CenteredSignIn = () => (
 const CenteredSignUp = () => (
   <AuthLayout title="Create an Account">
     <div className="w-full p-4">
-      <ClerkSignUp 
-        routing="path" 
-        path="/signup" 
+      <ClerkSignUp
+        routing="path"
+        path="/signup"
         signInUrl="/signin"
       />
     </div>
@@ -117,7 +118,7 @@ const CenteredSignUp = () => (
 const APITokenSetup = ({ children }: { children: React.ReactNode }) => {
   const { getToken } = useClerkAuthContext();
   const [isReady, setIsReady] = useState(false);
-  
+
   useEffect(() => {
     const setup = async () => {
       try {
@@ -159,7 +160,7 @@ const OAuthCallbackHandler = () => {
       const timer = setTimeout(() => {
         navigate("/redirect-to-dashboard", { replace: true });
       }, 1500);
-      
+
       return () => clearTimeout(timer);
     } catch (err) {
       console.error("OAuth callback error:", err);
@@ -196,55 +197,66 @@ const OAuthCallbackHandler = () => {
   );
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <ClerkAuthProvider>
-        <APITokenSetup>
-          <BrowserRouter>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/companies" element={<Companies />} />
-              
-              {/* Auth routes using Clerk components */}
-              <Route path="/signin/*" element={<CenteredSignIn />} />
-              <Route path="/signup/*" element={<CenteredSignUp />} />
-              <Route path="/sso-callback" element={<OAuthCallbackHandler />} />
-              
-              {/* Redirect route that will handle redirecting to the dashboard */}
-              <Route path="/redirect-to-dashboard" element={<RedirectToDashboard />} />
-              
-              {/* Protected routes */}
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* 404 route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </APITokenSetup>
-      </ClerkAuthProvider>
-      <Chatbot />
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const chatbotRef = useRef<ChatbotRef>(null);
+  useEffect(() => {
+    (window as any).chatbotRef = chatbotRef.current;
+  }); // update on every render
+
+  // Initialize API key
+  const API_KEY = '0c187fdd35mshf36ce5f69972f2fp1656f4jsn73130185f98e';
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <ClerkAuthProvider>
+          <APITokenSetup>
+            <BrowserRouter>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/companies" element={<Companies />} />
+
+                {/* Auth routes using Clerk components */}
+                <Route path="/signin/*" element={<CenteredSignIn />} />
+                <Route path="/signup/*" element={<CenteredSignUp />} />
+                <Route path="/sso-callback" element={<OAuthCallbackHandler />} />
+
+                {/* Redirect route that will handle redirecting to the dashboard */}
+                <Route path="/redirect-to-dashboard" element={<RedirectToDashboard />} />
+
+                {/* Protected routes */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* 404 route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </APITokenSetup>
+        </ClerkAuthProvider>
+        <ApiKeyInitializer apiKey={API_KEY} />
+        <Chatbot ref={chatbotRef} />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

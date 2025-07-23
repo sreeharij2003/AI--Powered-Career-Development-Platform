@@ -10,49 +10,77 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { assessments } from "@/data/assessmentQuestions";
-import { Brain, Check, Timer } from "lucide-react";
+import { Timer } from "lucide-react";
 import { useState } from "react";
 import AssessmentQuiz from "./AssessmentQuiz";
+import AssessmentResults from "./AssessmentResults";
 
 interface CompletedAssessment {
   id: number;
   title: string;
   completedDate: string;
   score: number;
-  strengths: string[];
-  improvements: string[];
+  detailedAnalysis: any;
+  basicResults: any;
 }
 
 const SkillsAssessment = () => {
   const [activeTab, setActiveTab] = useState("available");
   const [selectedAssessment, setSelectedAssessment] = useState<number | null>(null);
   const [completedAssessments, setCompletedAssessments] = useState<CompletedAssessment[]>([]);
+  const [viewingResults, setViewingResults] = useState<any>(null);
 
   const handleStartAssessment = (id: number) => {
     setSelectedAssessment(id);
   };
 
-  const handleCompleteAssessment = (score: number, feedback: { strengths: string[]; improvements: string[] }) => {
+  const handleCompleteAssessment = (analysisResult: any) => {
     const assessment = assessments.find(a => a.id === selectedAssessment);
-    if (assessment) {
+    if (assessment && analysisResult.success) {
       const completedAssessment: CompletedAssessment = {
         id: assessment.id,
         title: assessment.title,
         completedDate: new Date().toLocaleDateString(),
-        score,
-        strengths: feedback.strengths,
-        improvements: feedback.improvements,
+        score: analysisResult.data.basicResults.score,
+        detailedAnalysis: analysisResult.data.detailedAnalysis,
+        basicResults: analysisResult.data.basicResults,
       };
       setCompletedAssessments([...completedAssessments, completedAssessment]);
       setSelectedAssessment(null);
-      setActiveTab("completed");
+
+      // Show detailed results
+      setViewingResults({
+        assessmentTitle: assessment.title,
+        basicResults: analysisResult.data.basicResults,
+        detailedAnalysis: analysisResult.data.detailedAnalysis
+      });
     }
   };
 
   const handleBack = () => {
     setSelectedAssessment(null);
+    setViewingResults(null);
   };
 
+  const handleViewResults = (assessment: CompletedAssessment) => {
+    setViewingResults({
+      assessmentTitle: assessment.title,
+      basicResults: assessment.basicResults,
+      detailedAnalysis: assessment.detailedAnalysis
+    });
+  };
+
+  // Show detailed results
+  if (viewingResults) {
+    return (
+      <AssessmentResults
+        result={viewingResults}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  // Show assessment quiz
   if (selectedAssessment) {
     const assessment = assessments.find(a => a.id === selectedAssessment);
     if (assessment) {
@@ -150,34 +178,19 @@ const SkillsAssessment = () => {
                   <Progress value={assessment.score} className="h-2" />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm font-medium">
-                      <Check className="h-4 w-4 mr-2 text-green-500" />
-                      Strengths
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1 pl-6 list-disc">
-                      {assessment.strengths.map((strength, index) => (
-                        <li key={index}>{strength}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm font-medium">
-                      <Brain className="h-4 w-4 mr-2 text-amber-500" />
-                      Areas for Improvement
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1 pl-6 list-disc">
-                      {assessment.improvements.map((improvement, index) => (
-                        <li key={index}>{improvement}</li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Assessment completed with AI-powered analysis available
+                  </p>
                 </div>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">
-                  View Detailed Results
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleViewResults(assessment)}
+                >
+                  View Detailed AI Analysis
                 </Button>
               </CardFooter>
             </Card>

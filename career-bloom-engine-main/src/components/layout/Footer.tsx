@@ -1,9 +1,8 @@
-
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-gray-50 py-12 border-t border-gray-100">
+    <footer className="w-full py-12 border-t border-gray-100 transition-colors duration-500">
       <div className="container">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2">

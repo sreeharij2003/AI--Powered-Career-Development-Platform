@@ -1,5 +1,4 @@
-import ApiKeyInitializer from "@/components/jobs/ApiKeyInitializer";
-import ApiTester from "@/components/jobs/ApiTester";
+// API components no longer needed - backend handles JSearch API integration
 import MainLayout from "@/components/layout/MainLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,15 +9,12 @@ import { fetchJobs, searchJobs } from "@/services/jobsService";
 import { JobListing } from "@/types/jobs";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, Briefcase, Building, Clock, Filter, LayoutDashboard, MapPin, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Jobs = () => {
   const { isAuthenticated } = useClerkAuthContext();
   const [searchTerm, setSearchTerm] = useState("");
-  const [apiKeyInitialized, setApiKeyInitialized] = useState(false);
-  const [showApiTester, setShowApiTester] = useState(false);
-  const [errorDetails, setErrorDetails] = useState<string>('');
   const [usingMockData, setUsingMockData] = useState(false);
   const [filters, setFilters] = useState({
     location: "",
@@ -27,63 +23,36 @@ const Jobs = () => {
     industry: [] as string[]
   });
 
-  // JSearch API key - this would ideally come from environment variables
-  const apiKey = "50e16db1b9msh3cd5b97a059ce2bp181ba5jsndd3ab1bbc0ac";
-
-  // Initialize API key
-  useEffect(() => {
-    if (apiKey) {
-      // Small delay to ensure component is mounted
-      const timer = setTimeout(() => {
-        setApiKeyInitialized(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [apiKey]);
-
   const { data: jobs = [], isLoading, error, refetch } = useQuery({
-    queryKey: ['jobs', searchTerm, filters, apiKeyInitialized],
+    queryKey: ['jobs', searchTerm, filters],
     queryFn: async () => {
       try {
+        console.log('Fetching jobs via backend workflow...');
         // Default to searching for developer jobs if no search term
         const effectiveSearchTerm = searchTerm || "developer";
-        const result = searchTerm ? 
-          await searchJobs(effectiveSearchTerm, filters) : 
+        const result = searchTerm ?
+          await searchJobs(effectiveSearchTerm, filters) :
           await fetchJobs(filters);
-        
+
         // Check if we're using mock data (look for mock data markers)
-        if (result.length > 0 && 
+        if (result.length > 0 &&
             ['Microsoft', 'Google', 'Amazon', 'Netflix', 'Facebook'].includes(result[0].company)) {
           setUsingMockData(true);
+          console.log('Using mock data - backend may have fallen back to mock data');
         } else {
           setUsingMockData(false);
+          console.log('Using real job data from backend workflow');
         }
-        
-        setErrorDetails('');
+
         return result;
       } catch (err) {
-        console.error('Error fetching jobs:', err);
-        
-        // Check if it's an API error
-        const errorMessage = err instanceof Error ? err.message : String(err);
-        setErrorDetails(errorMessage);
+        console.error('Error fetching jobs via backend:', err);
         throw err;
       }
     },
     staleTime: 60000, // 1 minute
-    enabled: apiKeyInitialized, // Only run query when API key is initialized
-    retry: 1, // Only retry once to avoid hammering the API
+    retry: 2, // Retry twice for backend calls
   });
-
-  // Effect to refetch jobs when API key is initialized
-  useEffect(() => {
-    if (apiKeyInitialized) {
-      console.log("API key initialized, fetching jobs...");
-      refetch().catch(err => {
-        console.error('Error refetching jobs:', err);
-      });
-    }
-  }, [apiKeyInitialized, refetch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,14 +80,8 @@ const Jobs = () => {
     });
   };
 
-  const toggleApiTester = () => {
-    setShowApiTester(prev => !prev);
-  };
-
   return (
     <MainLayout>
-      {/* Initialize the API key */}
-      <ApiKeyInitializer apiKey={apiKey} />
       
       <div className="container py-10">
         {isAuthenticated && (
@@ -139,7 +102,7 @@ const Jobs = () => {
             <div>
               <p className="font-medium text-yellow-800">Using sample job data</p>
               <p className="text-sm text-yellow-700">
-                The JSearch API returned an error. Showing sample job listings instead.
+                The backend workflow fell back to sample data. This may indicate an issue with the JSearch API or database connection.
               </p>
             </div>
           </div>
@@ -215,16 +178,9 @@ const Jobs = () => {
               </CardContent>
               <CardFooter className="flex flex-col gap-2">
                 <Button className="w-full btn-gradient" onClick={handleApplyFilters}>Apply Filters</Button>
-                <Button variant="outline" className="w-full" onClick={toggleApiTester}>
-                  {showApiTester ? 'Hide API Tester' : 'Show API Tester'}
-                </Button>
               </CardFooter>
             </Card>
-            
-            {/* API Tester */}
-            {showApiTester && (
-              <ApiTester />
-            )}
+
           </div>
           
           {/* Job listings */}
@@ -249,12 +205,7 @@ const Jobs = () => {
               </div>
             </div>
             
-            {!apiKeyInitialized ? (
-              <div className="text-center py-10">
-                <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p>Initializing API connection...</p>
-              </div>
-            ) : isLoading ? (
+            {isLoading ? (
               <div className="text-center py-10">
                 <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
                 <p>Loading jobs...</p>
@@ -263,11 +214,11 @@ const Jobs = () => {
               <div className="text-center py-10">
                 <div className="bg-red-50 border border-red-200 rounded-md p-6">
                   <h3 className="text-lg font-semibold text-red-600 mb-2">Error loading jobs</h3>
-                  <p className="text-red-600 mb-4">Please try again later or check your API key.</p>
-                  
-                  {errorDetails && (
+                  <p className="text-red-600 mb-4">Please try again later.</p>
+
+                  {error && (
                     <div className="mt-4 p-3 bg-red-100 rounded text-sm text-red-800 font-mono overflow-auto max-h-40">
-                      {errorDetails}
+                      {error.message}
                     </div>
                   )}
                   
@@ -351,7 +302,7 @@ const Jobs = () => {
                             </div>
                           )}
                           <div className="flex items-center text-xs text-muted-foreground">
-                            <span>Source: {job.source || (usingMockData ? 'Sample Data' : 'JSearch')}</span>
+                            <span>Source: {job.source || (usingMockData ? 'Sample Data' : 'Backend Workflow')}</span>
                           </div>
                         </div>
                       </div>

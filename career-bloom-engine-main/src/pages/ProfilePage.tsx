@@ -90,6 +90,8 @@ const ProfilePage = () => {
   const [resumeParseSuccess, setResumeParseSuccess] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  // TODO: Add resume event emitter later
+
   // Load profile data from localStorage on component mount
   useEffect(() => {
     const savedProfile = localStorage.getItem('userProfile');
@@ -242,8 +244,10 @@ const ProfilePage = () => {
               // Add other fields as needed
             }));
           }
-          
+
           setResumeParseSuccess(true);
+
+          // TODO: Emit resume uploaded event to trigger job recommendation refresh
         }
       } catch (error) {
         console.error('Error uploading or parsing resume:', error);
@@ -270,9 +274,9 @@ const ProfilePage = () => {
       }
       
       // Update local state
-      setProfile({ 
-        ...profile, 
-        resume: '', 
+      setProfile({
+        ...profile,
+        resume: '',
         resumeFile: null,
         resumeURL: null,
         resumeUploadDate: null,
@@ -280,6 +284,8 @@ const ProfilePage = () => {
         resumeContentType: null,
         resumeId: null
       });
+
+      // TODO: Emit resume deleted event
     } catch (error) {
       console.error('Error deleting resume:', error);
       setUploadError('Failed to delete resume. Please try again.');

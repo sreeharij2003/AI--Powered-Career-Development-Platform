@@ -1,0 +1,56 @@
+## ✅ FIXED RESUME CUSTOMIZATION SYSTEM
+
+### 🎯 **What the System Now Does:**
+
+**ONLY MODIFIES:**
+1. ✅ **Summary** - Adds relevant keywords from job description
+2. ✅ **Skills** - Adds job-relevant skills to existing skills list
+
+**PRESERVES EXACTLY AS-IS:**
+- ❌ **Contact Info** - Name, email, phone, LinkedIn (unchanged)
+- ❌ **Education** - Degrees, institutions, years, GPAs (unchanged)
+- ❌ **Projects** - Titles, descriptions, technologies (unchanged)
+- ❌ **Experience** - Job titles, companies, responsibilities (unchanged)
+- ❌ **Certifications** - All certification details (unchanged)
+- ❌ **Languages** - Language proficiency levels (unchanged)
+- ❌ **Interests** - Personal interests and hobbies (unchanged)
+
+### 📋 **Example Output:**
+
+**ORIGINAL SUMMARY:**
+"Highly proficient front-end developer with proven experience designing and implementing responsive web interfaces using HTML, CSS, and JavaScript. Expert in integrating APIs, optimizing website performance, and resolving cross-browser compatibility issues, consistently delivering clean, well-documented code within collaborative team environments."
+
+**CUSTOMIZED SUMMARY (for React Developer job):**
+"Highly proficient front-end developer with proven experience designing and implementing responsive web interfaces using HTML, CSS, and JavaScript. Expert in integrating APIs, optimizing website performance, and resolving cross-browser compatibility issues, consistently delivering clean, well-documented code within collaborative team environments. Experienced with React. Experienced with TypeScript."
+
+**ORIGINAL SKILLS:**
+HTML, CSS, JavaScript, Responsive Design, API Integration
+
+**CUSTOMIZED SKILLS (for React Developer job):**
+React, TypeScript, HTML, CSS, JavaScript, Responsive Design, API Integration, Node.js
+
+### 🚀 **How to Use:**
+
+1. Go to: http://localhost:8080
+2. Navigate to: Dashboard → **Resume Customizer** tab
+3. Upload: Your PDF resume
+4. Paste: Complete job description
+5. Select: Template (template1-template6)
+6. Click: "Customize Resume"
+7. Download: Your optimized PDF
+
+### ⚠️ **Important Notes:**
+
+- The system will NEVER change your education, projects, or experience details
+- It only enhances your summary and adds relevant skills
+- All your factual information remains exactly as you wrote it
+- If AI service is unavailable, it provides basic keyword-based customization
+- The system preserves your original resume structure and formatting
+
+### 🎯 **Current Status:**
+
+✅ PDF parsing working
+✅ AI customization working  
+✅ Fallback system working
+✅ Only summary and skills modified
+✅ All other content preserved exactly

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const CTASection = () => {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 transition-colors duration-500">
       <div className="container px-4 md:px-6">
         <div className="rounded-3xl bg-gradient-to-br from-primary to-secondary overflow-hidden shadow-xl">
           <div className="px-8 py-16 md:p-16 grid md:grid-cols-2 gap-8 items-center">
@@ -18,40 +18,46 @@ const CTASection = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Link 
                   to="/dashboard?tool=resume-builder" 
-                  className="flex items-center p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                  className="relative flex items-center p-4 bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 backdrop-blur-lg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-800 hover:shadow-3xl hover:scale-[1.03] hover:border-primary-purple/60 dark:hover:border-primary-purple/80 transition-all group overflow-hidden"
                 >
-                  <FileText className="h-6 w-6 text-white mr-3" />
-                  <div>
+                  <div className="absolute inset-0 pointer-events-none rounded-xl bg-gradient-to-br from-primary-purple/10 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-300" />
+                  <FileText className="h-6 w-6 text-white mr-3 group-hover:drop-shadow-[0_0_8px_rgba(124,58,237,0.4)] transition-all" />
+                  <div className="relative">
                     <h3 className="text-white font-semibold">Resume Builder</h3>
                     <p className="text-white/70 text-sm">Create a standout resume</p>
                   </div>
                 </Link>
-                <Link 
-                  to="/dashboard?tool=cover-letter" 
-                  className="flex items-center p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+
+                <Link
+                  to="/dashboard?tool=cover-letter"
+                  className="relative flex items-center p-4 bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 backdrop-blur-lg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-800 hover:shadow-3xl hover:scale-[1.03] hover:border-primary-purple/60 dark:hover:border-primary-purple/80 transition-all group overflow-hidden"
                 >
-                  <PenLine className="h-6 w-6 text-white mr-3" />
-                  <div>
+                  <div className="absolute inset-0 pointer-events-none rounded-xl bg-gradient-to-br from-primary-purple/10 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-300" />
+                  <PenLine className="h-6 w-6 text-white mr-3 group-hover:drop-shadow-[0_0_8px_rgba(124,58,237,0.4)] transition-all" />
+                  <div className="relative">
                     <h3 className="text-white font-semibold">Cover Letters</h3>
                     <p className="text-white/70 text-sm">Generate custom letters</p>
                   </div>
                 </Link>
-                <Link 
-                  to="/dashboard?tool=career-path" 
-                  className="flex items-center p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+
+                <Link
+                  to="/dashboard?tool=career-path"
+                  className="relative flex items-center p-4 bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 backdrop-blur-lg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-800 hover:shadow-3xl hover:scale-[1.03] hover:border-primary-purple/60 dark:hover:border-primary-purple/80 transition-all group overflow-hidden"
                 >
-                  <TrendingUp className="h-6 w-6 text-white mr-3" />
-                  <div>
+                  <div className="absolute inset-0 pointer-events-none rounded-xl bg-gradient-to-br from-primary-purple/10 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-300" />
+                  <TrendingUp className="h-6 w-6 text-white mr-3 group-hover:drop-shadow-[0_0_8px_rgba(124,58,237,0.4)] transition-all" />
+                  <div className="relative">
                     <h3 className="text-white font-semibold">Career Path</h3>
                     <p className="text-white/70 text-sm">Plan your growth</p>
                   </div>
                 </Link>
                 <Link 
                   to="/dashboard?tool=skill-gap" 
-                  className="flex items-center p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                  className="relative flex items-center p-4 bg-gradient-to-br from-white/80 via-purple-100/60 to-purple-200/40 dark:from-gray-900/80 dark:via-gray-950/60 dark:to-purple-950/40 backdrop-blur-lg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-800 hover:shadow-3xl hover:scale-[1.03] hover:border-primary-purple/60 dark:hover:border-primary-purple/80 transition-all group overflow-hidden"
                 >
-                  <Sparkles className="h-6 w-6 text-white mr-3" />
-                  <div>
+                  <div className="absolute inset-0 pointer-events-none rounded-xl bg-gradient-to-br from-primary-purple/10 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-300" />
+                  <Sparkles className="h-6 w-6 text-white mr-3 group-hover:drop-shadow-[0_0_8px_rgba(124,58,237,0.4)] transition-all" />
+                  <div className="relative">
                     <h3 className="text-white font-semibold">Skill Analysis</h3>
                     <p className="text-white/70 text-sm">Bridge your skill gaps</p>
                   </div>

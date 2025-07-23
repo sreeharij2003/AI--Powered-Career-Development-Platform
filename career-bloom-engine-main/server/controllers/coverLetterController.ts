@@ -1,335 +1,335 @@
 import { spawn } from 'child_process';
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import fs from 'fs';
+import multer from 'multer';
 import path from 'path';
-import UserProfile, { ICoverLetter, IUserProfile } from '../models/UserProfile'; // Import interfaces
-import { generateDOCX, generatePDF } from '../utils/documentGenerator';
-import { handleError } from '../utils/errorHandler';
 
-// Helper function to run Python script and return output as a Promise
-const runPythonScript = (scriptPath: string, inputData: any): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const python = spawn('python', [scriptPath]);
-    let stdoutBuffer = '';
-    let stderrBuffer = '';
+// Configure multer for file uploads
+const upload = multer({
+  dest: 'uploads/',
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
 
-    python.stdout.on('data', (data) => {
-      const chunk = data.toString();
-      stdoutBuffer += chunk;
-      console.log('Python stdout data:', chunk); // Log data as it comes
-    });
+interface CoverLetterRequest {
+  resumeText: string;
+  jobDescription: string;
+}
 
-    python.stderr.on('data', (data) => {
-      const chunk = data.toString();
-      stderrBuffer += chunk;
-      console.error('Python stderr data:', chunk); // Log stderr data
-    });
+interface CoverLetterResponse {
+  success: boolean;
+  coverLetter?: string;
+  error?: string;
+  message?: string;
+}
 
-    python.on('close', (code) => {
-      console.log(`Python script closed with code ${code}`); // Log closure
-      console.log('Final Python stdoutBuffer:', stdoutBuffer); // Log final stdout
-      console.error('Final Python stderrBuffer:', stderrBuffer); // Log final stderr
+/**
+ * Generate cover letter using GPT-2 LoRA fine-tuned model
+ * Handles both file upload and direct text input
+ */
+export const generateCoverLetter = async (req: Request, res: Response) => {
+  try {
+    console.log(' Starting cover letter generation...');
 
-      if (code !== 0) {
-        const errorDetail = stderrBuffer || `Exited with code ${code}`;
-        console.error('Python script execution failed:', errorDetail); // More specific log
-        return reject(new Error(`Python script execution failed: ${errorDetail}`));
+    let resumeText = '';
+    let jobDescription = '';
+
+    // Check if this is a file upload (FormData) or JSON request
+    if (req.file) {
+      // File upload case
+      console.log('📁 Processing uploaded file:', req.file.originalname);
+
+      jobDescription = req.body.jobDescription;
+
+      if (!jobDescription) {
+        return res.status(400).json({
+          success: false,
+          error: 'Job description is required',
+          coverLetter: ''
+        });
       }
 
-      if (stderrBuffer) {
-           console.warn('Python script had warnings/stderr output:', stderrBuffer);
+      // Extract text from uploaded file
+      try {
+        console.log('📁 File details:', {
+          originalname: req.file.originalname,
+          mimetype: req.file.mimetype,
+          size: req.file.size,
+          path: req.file.path,
+          exists: fs.existsSync(req.file.path)
+        });
+
+        resumeText = await extractTextFromResume(req.file);
+        console.log('📄 Text extracted from file, length:', resumeText.length);
+
+        // Clean up uploaded file
+        if (fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+      } catch (extractError: any) {
+        console.error('❌ Error extracting text from file:', extractError);
+        console.error('❌ Full error details:', extractError.stack);
+
+        // Clean up uploaded file even on error
+        if (req.file && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+
+        return res.status(400).json({
+          success: false,
+          error: `Failed to extract text from resume file: ${extractError.message}`,
+          coverLetter: ''
+        });
+      }
+    } else {
+      // JSON request case (direct text input)
+      const requestData: CoverLetterRequest = req.body;
+      resumeText = requestData.resumeText;
+      jobDescription = requestData.jobDescription;
+    }
+
+    // Validate extracted/provided data
+    if (!resumeText || !jobDescription) {
+      return res.status(400).json({
+        success: false,
+        error: 'Both resume text and job description are required',
+        coverLetter: ''
+      });
+    }
+
+    if (resumeText.trim().length === 0 || jobDescription.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Resume text and job description cannot be empty',
+        coverLetter: ''
+      });
+    }
+
+    console.log('📝 Input validation passed');
+    console.log(`Resume length: ${resumeText.length} characters`);
+    console.log(`Job description length: ${jobDescription.length} characters`);
+
+    // Check if model path exists
+    const modelPath = process.env.GPT2_MODEL_PATH;
+    if (!modelPath) {
+      return res.status(500).json({
+        success: false,
+        error: 'GPT2_MODEL_PATH environment variable not configured',
+        coverLetter: ''
+      });
+    }
+
+    if (!fs.existsSync(modelPath)) {
+      return res.status(500).json({
+        success: false,
+        error: `Model path does not exist: ${modelPath}`,
+        coverLetter: ''
+      });
+    }
+
+    console.log(`🔍 Model path verified: ${modelPath}`);
+
+    // Path to Python script
+    const scriptPath = path.join(__dirname, '..', 'scripts', 'generateCoverLetter.py');
+
+    if (!fs.existsSync(scriptPath)) {
+      return res.status(500).json({
+        success: false,
+        error: 'Cover letter generation script not found',
+        coverLetter: ''
+      });
+    }
+
+    console.log(`🐍 Python script path: ${scriptPath}`);
+
+    // Call Python script
+    const result = await callPythonScript(scriptPath, resumeText, jobDescription);
+
+    console.log('✅ Cover letter generation completed');
+    res.json(result);
+
+  } catch (error: any) {
+    console.error('❌ Error in generateCoverLetter:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to generate cover letter',
+      coverLetter: ''
+    });
+  }
+};
+
+/**
+ * Call Python script to generate cover letter
+ */
+function callPythonScript(scriptPath: string, resumeText: string, jobDescription: string): Promise<CoverLetterResponse> {
+  return new Promise((resolve, reject) => {
+    console.log('🚀 Spawning Python process...');
+
+    // Spawn Python process
+    const pythonProcess = spawn('python', [scriptPath, resumeText, jobDescription], {
+      env: { ...process.env }, // Pass all environment variables including GPT2_MODEL_PATH
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    // Collect stdout data
+    pythonProcess.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+
+    // Collect stderr data (for logging)
+    pythonProcess.stderr.on('data', (data) => {
+      stderr += data.toString();
+      console.log('Python stderr:', data.toString());
+    });
+
+    // Handle process completion
+    pythonProcess.on('close', (code) => {
+      console.log(`Python process exited with code: ${code}`);
+
+      if (stderr) {
+        console.log('Python stderr output:', stderr);
       }
 
       try {
-        const result = JSON.parse(stdoutBuffer);
-        if (result.error) {
-          console.error('Python script returned JSON error:', result.error); // Log specific error
-          return reject(new Error(result.error));
-        } else if (result.coverLetter !== undefined && result.coverLetter !== null && typeof result.coverLetter === 'string') {
-          console.log('Python script successfully returned coverLetter.'); // Log success
-          return resolve(result.coverLetter);
+        // Parse JSON response from Python script
+        const response: CoverLetterResponse = JSON.parse(stdout);
+
+        if (response.success) {
+          console.log('✅ Cover letter generated successfully');
+          resolve(response);
         } else {
-          const errorDetail = 'Python script did not return expected coverLetter JSON output or content type.';
-          console.error(`${errorDetail}\nFull stdout: ${stdoutBuffer}`); // Fix console log syntax
-          return reject(new Error(errorDetail));
+          console.log('❌ Python script returned error:', response.error);
+          resolve(response); // Still resolve, but with error in response
         }
-      } catch (e: any) { // Explicitly type catch variable
-        const errorDetail = `Failed to parse Python script JSON output: ${e.message}`;;
-        console.error(`${errorDetail}\nFull stdout: ${stdoutBuffer}`); // Fix console log syntax
-        return reject(new Error(errorDetail));
+      } catch (parseError) {
+        console.error('❌ Failed to parse Python script output:', parseError);
+        console.error('Raw stdout:', stdout);
+
+        reject({
+          success: false,
+          error: 'Failed to parse cover letter generation response',
+          coverLetter: ''
+        });
       }
     });
 
-    python.on('error', (err) => {
-      console.error('Failed to spawn Python process:', err); // Log spawn error
-      reject(new Error(`Failed to spawn Python process: ${err.message}`));
+    // Handle process errors
+    pythonProcess.on('error', (error) => {
+      console.error('❌ Python process error:', error);
+      reject({
+        success: false,
+        error: `Python process failed: ${error.message}`,
+        coverLetter: ''
+      });
     });
 
-    python.stdin.write(JSON.stringify(inputData));
-    python.stdin.end();
+    // Set timeout (5 minutes)
+    setTimeout(() => {
+      pythonProcess.kill();
+      reject({
+        success: false,
+        error: 'Cover letter generation timed out',
+        coverLetter: ''
+      });
+    }, 300000); // 5 minutes timeout
   });
-};
+}
 
-// Generate new cover letter
-export const generateCoverLetter = async (req: Request, res: Response) => {
+/**
+ * Test file extraction endpoint for debugging
+ */
+export const testFileExtraction = async (req: Request, res: Response) => {
   try {
-    const { jobDescription, userProfile } = req.body;
-    const userId = req.user?.id; // Assuming authentication middleware provides user id
-
-    if (!jobDescription || !userProfile) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    const scriptPath = path.join(__dirname, '..', 'scripts', 'cover_letter_generator.py');
-
-    let generatedContent = '';
-
-    try {
-      console.log('Attempting to run Python cover letter script...'); // Log before running
-      generatedContent = await runPythonScript(scriptPath, { jobDescription, userProfile });
-      console.log('Python script ran successfully.'); // Log success after awaiting
-
-    } catch (scriptRunError: any) { // Explicitly type catch variable
-      console.error('Caught error from runPythonScript:', scriptRunError); // Log caught error
-      handleError(res, scriptRunError, 'Error during cover letter script execution');
-      return;
-    }
-
-    if (!generatedContent) {
-       console.error('generatedContent is empty after script run.'); // Log empty content
-       return res.status(500).json({ 
-        error: 'No content generated',
-        details: 'Python script ran, but returned empty cover letter content.'
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'No file uploaded'
       });
     }
 
-    // Save to database
-    try {
-      const userProfileDoc = await UserProfile.findOne({ userId }) as IUserProfile | null; // Cast to imported interface
-      
-      if (!userProfileDoc) {
-        console.error('User profile not found for authenticated user');
-         return res.status(404).json({ error: 'User profile not found' });
-      }
+    console.log('🧪 Testing file extraction...');
+    console.log('📁 File details:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path,
+      exists: fs.existsSync(req.file.path)
+    });
 
-      // Ensure generatedContent and coverLetters array exist, initialize if needed
-      if (!userProfileDoc.generatedContent) {
-          userProfileDoc.generatedContent = { coverLetters: [], resumes: [] };
-      }
+    const extractedText = await extractTextFromResume(req.file);
 
-      // Type guard to ensure coverLetters is an array before pushing
-      if (!Array.isArray(userProfileDoc.generatedContent.coverLetters)) {
-         userProfileDoc.generatedContent.coverLetters = [];
-      }
-
-      userProfileDoc.generatedContent.coverLetters.push({
-        title: `Cover Letter for ${jobDescription.company || 'Unknown Company'}`,
-        content: generatedContent,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        jobId: jobDescription.jobId ? new mongoose.Types.ObjectId(jobDescription.jobId) : undefined, // Use ObjectId if jobId exists
-        company: jobDescription.company
-      } as ICoverLetter); // Explicitly cast to ICoverLetter
-
-      await userProfileDoc.save();
-
-      console.log('Cover letter saved successfully.'); // Log save success
-      res.json({
-        message: 'Cover letter generated successfully',
-        coverLetter: generatedContent
-      });
-
-    } catch (dbError: any) { // Explicitly type catch variable
-      console.error('Caught database error during save:', dbError); // Log database error
-      handleError(res, dbError, 'Failed to save cover letter to database');
+    // Clean up uploaded file
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
     }
 
-  } catch (error: any) { // Explicitly type catch variable
-    console.error('Caught initial controller error:', error); // Log initial error
-    handleError(res, error, 'Failed in cover letter generation controller (initial setup)');
+    res.json({
+      success: true,
+      fileInfo: {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      },
+      extractedText: extractedText,
+      textLength: extractedText.length,
+      preview: extractedText.substring(0, 200) + '...'
+    });
+
+  } catch (error: any) {
+    console.error('❌ Test extraction error:', error);
+
+    // Clean up uploaded file even on error
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      stack: error.stack
+    });
   }
 };
 
-// Get cover letter history
-export const getCoverLetterHistory = async (req: Request, res: Response) => {
+/**
+ * Health check endpoint for cover letter service
+ */
+export const checkCoverLetterHealth = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
-    const userProfile = await UserProfile.findOne({ userId }) as IUserProfile | null; // Cast to imported interface
-    
-    if (!userProfile) {
-      return res.status(404).json({ error: 'User profile not found' });
-    }
+    const modelPath = process.env.GPT2_MODEL_PATH;
+    const scriptPath = path.join(__dirname, '..', 'scripts', 'generateCoverLetter.py');
 
-    // Ensure generatedContent and coverLetters array exist and are arrays before returning
-    if (!userProfile.generatedContent || !Array.isArray(userProfile.generatedContent.coverLetters)) {
-        return res.json([]); // Return empty array if no generated content or not an array
-    }
+    console.log('🔍 Health check - Environment variables:');
+    console.log('GPT2_MODEL_PATH:', modelPath);
+    console.log('Model path exists:', modelPath ? fs.existsSync(modelPath) : false);
 
-    // Return the cover letters (sorted by creation date, newest first). Ensure createdAt is treated as Date.
-    res.json(userProfile.generatedContent.coverLetters.sort((a: ICoverLetter, b: ICoverLetter) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    const health = {
+      modelPathConfigured: !!modelPath,
+      modelPathValue: modelPath || 'NOT_SET',
+      modelPathExists: modelPath ? fs.existsSync(modelPath) : false,
+      scriptExists: fs.existsSync(scriptPath),
+      scriptPath: scriptPath,
+      pythonAvailable: true // We'll assume Python is available
+    };
 
-  } catch (error: any) { // Explicitly type catch variable
-    console.error('Caught error fetching cover letter history:', error); // Log history error
-    handleError(res, error, 'Failed to fetch cover letter history');
+    const isHealthy = health.modelPathConfigured && health.modelPathExists && health.scriptExists;
+
+    res.json({
+      success: true,
+      healthy: isHealthy,
+      details: health,
+      message: isHealthy ? 'Cover letter service is healthy' : 'Cover letter service has issues',
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      healthy: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 };
-
-// Update cover letter
-export const updateCoverLetter = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { content } = req.body;
-    const userId = req.user?.id;
-
-    if (!id || typeof id !== 'string') {
-        return res.status(400).json({ error: 'Cover letter ID (string) is required for update.' });
-    }
-
-    if (!content || typeof content !== 'string') {
-        return res.status(400).json({ error: 'Valid content field (string) is required for update.' });
-    }
-
-    // Find the user and update the specific cover letter
-    const result = await UserProfile.findOneAndUpdate(
-      { 
-        userId,
-        'generatedContent.coverLetters': { $exists: true } // Ensure generatedContent exists before searching
-      } as any, // Cast to any to bypass strict type checking for nested query
-      {
-        $set: {
-          'generatedContent.coverLetters.$[elem].content': content,
-          'generatedContent.coverLetters.$[elem].updatedAt': new Date()
-        }
-      } as any, // Cast to any
-      {
-        new: true,
-        arrayFilters: [{ 'elem._id': new mongoose.Types.ObjectId(id) }] // Use mongoose.Types.ObjectId for id
-      }
-    );
-
-    if (!result) {
-       const userExists = await UserProfile.findOne({ userId });
-       if (!userExists) {
-           console.warn(`Update failed: User profile not found for userId: ${userId}`); // Log warning
-           return res.status(404).json({ error: 'User profile not found' });
-       } else {
-           console.warn(`Update failed: Cover letter ${id} not found for user: ${userId}`); // Log warning
-           return res.status(404).json({ error: 'Cover letter not found for this user' });
-       }
-    }
-
-    console.log(`Cover letter ${id} updated successfully for user ${userId}.`); // Log update success
-    res.json({ message: 'Cover letter updated successfully' });
-
-  } catch (error: any) { // Explicitly type catch variable
-    console.error(`Caught error updating cover letter ${req.params.id ?? 'unknown id'} for user ${req.user?.id ?? 'unknown user'}:`, error); // Log update error with user id
-    handleError(res, error, 'Failed to update cover letter');
-  }
-};
-
-// Delete cover letter
-export const deleteCoverLetter = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user?.id;
-
-     if (!id || typeof id !== 'string') {
-        return res.status(400).json({ error: 'Cover letter ID (string) is required for deletion.' });
-    }
-
-    // Find the user and remove the specific cover letter from the array
-    const result = await UserProfile.findOneAndUpdate(
-      { userId },
-      {
-        $pull: {
-          'generatedContent.coverLetters': { _id: new mongoose.Types.ObjectId(id) } // Use mongoose.Types.ObjectId for id
-        }
-      }
-    );
-
-    if (!result) {
-       const userExists = await UserProfile.findOne({ userId });
-       if (!userExists) {
-           console.warn(`Delete failed: User profile not found for userId: ${userId}`); // Log warning
-           return res.status(404).json({ error: 'User profile not found' });
-       } else {
-            console.warn(`Delete failed: Cover letter ${id} not found for user: ${userId}`); // Log warning
-           return res.status(404).json({ error: 'Cover letter not found for this user' });
-       }
-    }
-
-    console.log(`Cover letter ${id} deleted successfully for user ${userId}.`); // Log delete success
-    res.json({ message: 'Cover letter deleted successfully' });
-
-  } catch (error: any) { // Explicitly type catch variable
-    console.error(`Caught error deleting cover letter ${req.params.id ?? 'unknown id'} for user ${req.user?.id ?? 'unknown user'}:`, error); // Log delete error with user id
-    handleError(res, error, 'Failed to delete cover letter');
-  }
-};
-
-// Export cover letter
-export const exportCoverLetter = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { format } = req.query;
-    const userId = req.user?.id;
-
-    if (!id || typeof id !== 'string') {
-         return res.status(400).json({ error: 'Cover letter ID (string) is required for export.' });
-    }
-
-    if (!format || (format !== 'pdf' && format !== 'docx')) {
-        return res.status(400).json({ error: 'Invalid or missing format parameter.' });
-    }
-
-    const userProfile = await UserProfile.findOne({ userId }) as IUserProfile | null; // Cast to imported interface
-    if (!userProfile) {
-      console.warn(`Export failed: User profile not found for userId: ${userId}`); // Log warning
-      return res.status(404).json({ error: 'User profile not found' });
-    }
-
-    if (!userProfile.generatedContent || !Array.isArray(userProfile.generatedContent.coverLetters)) {
-       console.warn(`Export failed: No cover letters found for user: ${userId}`); // Log warning
-       return res.status(404).json({ error: 'No cover letters found for this user' });
-    }
-
-    const coverLetter = userProfile.generatedContent.coverLetters.find(
-      (letter: ICoverLetter) => letter._id && letter._id.toString() === id
-    );
-
-    if (!coverLetter) {
-      console.warn(`Export failed: Cover letter ${id} not found for user: ${userId}`); // Log warning
-      return res.status(404).json({ error: 'Cover letter not found' });
-    }
-
-    let fileBuffer;
-    let contentType;
-    let fileExtension;
-
-    if (coverLetter.content === undefined || coverLetter.content === null || typeof coverLetter.content !== 'string') {
-         console.error(`Cover letter ${id} has missing or invalid content.`); // Log missing content
-         return res.status(500).json({ error: 'Cover letter content is missing or invalid.' });
-    }
-
-    if (format === 'pdf') {
-      fileBuffer = await generatePDF(coverLetter.content);
-      contentType = 'application/pdf';
-      fileExtension = 'pdf';
-    } else if (format === 'docx') {
-      fileBuffer = await generateDOCX(coverLetter.content);
-      contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      fileExtension = 'docx';
-    }
-
-    res.setHeader('Content-Type', contentType);
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=cover-letter-${coverLetter.title || 'generated'}.${fileExtension}`
-    );
-    res.send(fileBuffer);
-
-  } catch (error: any) { // Explicitly type catch variable
-    console.error(`Caught error exporting cover letter ${req.params.id ?? 'unknown id'} for user ${req.user?.id ?? 'unknown user'}:`, error); // Log export error with user id
-    handleError(res, error, 'Failed to export cover letter');
-  }
-}; 

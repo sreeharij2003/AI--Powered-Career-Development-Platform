@@ -7,7 +7,7 @@ import { useState } from "react";
 
 interface AssessmentQuizProps {
   assessment: Assessment;
-  onComplete: (score: number, feedback: { strengths: string[]; improvements: string[] }) => void;
+  onComplete: (analysisResult: any) => void;
   onBack: () => void;
 }
 
@@ -15,8 +15,9 @@ const AssessmentQuiz = ({ assessment, onComplete, onBack }: AssessmentQuizProps)
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>(new Array(assessment.questions.length).fill(-1));
   const [selectedOption, setSelectedOption] = useState<number>(-1);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedOption !== -1) {
       const newAnswers = [...answers];
       newAnswers[currentQuestion] = selectedOption;
@@ -26,28 +27,73 @@ const AssessmentQuiz = ({ assessment, onComplete, onBack }: AssessmentQuizProps)
       if (currentQuestion < assessment.questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
-        // Calculate score and generate feedback
-        const correctAnswers = answers.filter((answer, index) => 
-          answer === assessment.questions[index].correctAnswer
-        ).length;
-        const score = Math.round((correctAnswers / assessment.questions.length) * 100);
+        // Assessment completed - analyze with Gemini API
+        setIsAnalyzing(true);
 
-        // Generate feedback based on answers
-        const strengths: string[] = [];
-        const improvements: string[] = [];
+        try {
+          // Prepare assessment data for analysis
+          const assessmentData = {
+            assessmentId: assessment.id,
+            assessmentTitle: assessment.title,
+            answers: assessment.questions.map((question, index) => ({
+              questionId: question.id,
+              selectedOption: newAnswers[index],
+              question: question.question,
+              options: question.options,
+              correctAnswer: question.correctAnswer,
+              explanation: question.explanation
+            })),
+            completedAt: new Date().toISOString()
+          };
 
-        assessment.questions.forEach((question, index) => {
-          if (answers[index] === question.correctAnswer) {
-            strengths.push(...assessment.skills);
-          } else {
-            improvements.push(...assessment.skills);
+          // Send to backend for Gemini analysis
+          const response = await fetch('/api/skill-assessment/analyze', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(assessmentData),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to analyze assessment');
           }
-        });
 
-        onComplete(score, {
-          strengths: [...new Set(strengths)],
-          improvements: [...new Set(improvements)]
-        });
+          const analysisResult = await response.json();
+          onComplete(analysisResult);
+
+        } catch (error) {
+          console.error('Error analyzing assessment:', error);
+          // Fallback to basic analysis
+          const correctAnswers = newAnswers.filter((answer, index) =>
+            answer === assessment.questions[index].correctAnswer
+          ).length;
+          const score = Math.round((correctAnswers / assessment.questions.length) * 100);
+
+          onComplete({
+            success: true,
+            data: {
+              assessmentId: assessment.id,
+              assessmentTitle: assessment.title,
+              basicResults: {
+                score,
+                correctAnswers,
+                totalQuestions: assessment.questions.length,
+                percentage: score
+              },
+              detailedAnalysis: {
+                overallAssessment: {
+                  performanceLevel: score >= 80 ? 'Good' : score >= 60 ? 'Average' : 'Needs Improvement',
+                  summary: `You scored ${score}% on the ${assessment.title} assessment.`,
+                  keyInsights: [`Answered ${correctAnswers} out of ${assessment.questions.length} questions correctly`]
+                },
+                error: 'Detailed analysis unavailable'
+              }
+            }
+          });
+        } finally {
+          setIsAnalyzing(false);
+        }
       }
     }
   };
@@ -86,12 +132,19 @@ const AssessmentQuiz = ({ assessment, onComplete, onBack }: AssessmentQuizProps)
         </div>
       </CardContent>
       <CardFooter>
-        <Button 
-          className="w-full" 
+        <Button
+          className="w-full"
           onClick={handleNext}
-          disabled={selectedOption === -1}
+          disabled={selectedOption === -1 || isAnalyzing}
         >
-          {currentQuestion === assessment.questions.length - 1 ? "Complete Assessment" : "Next Question"}
+          {isAnalyzing ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Analyzing with AI...
+            </>
+          ) : (
+            currentQuestion === assessment.questions.length - 1 ? "Complete Assessment" : "Next Question"
+          )}
         </Button>
       </CardFooter>
     </Card>

@@ -4,7 +4,7 @@ import VectorStore from './vectorStore';
 import fetch from 'node-fetch';
 
 // OpenRouter API key - store this in environment variables in production
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY ='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';
 const SITE_URL = 'career-bloom-engine';
 const SITE_NAME = 'CareerBloom Assistant';
 
@@ -95,7 +95,7 @@ class ChatbotService {
   /**
    * Process user query and generate a response using RAG with DeepSeek LLM
    */
-  async processUserQuery(query: string): Promise<string> {
+  async processUserQuery(query: string, job?: any, resumeText?: string): Promise<string> {
     try {
       if (!this.isInitialized) {
         try {
@@ -130,6 +130,14 @@ class ChatbotService {
         }
       }
 
+      // Add job and resume context if provided
+      if (job) {
+        context += `\nJob Details: ${JSON.stringify(job)}`;
+      }
+      if (resumeText) {
+        context += `\nUser Resume: ${resumeText}`;
+      }
+
       // Generate response using DeepSeek or fall back to rule-based
       if (this.useLLM) {
         try {
@@ -153,8 +161,22 @@ class ChatbotService {
   private async generateLLMResponse(query: string, context: string, intent: string): Promise<string> {
     try {
       // Create system prompt based on intent and context
-      let systemPrompt = "You are CareerBloom Assistant, a helpful career advisor. ";
-      
+      let systemPrompt = `You are CareerBloom Assistant, a helpful career advisor.\n\n`;
+
+      // Special formatting for resume + job description analysis
+      if (context.includes('Job Details:') && context.includes('User Resume:')) {
+        systemPrompt += `When the user provides both a job description and a resume, always answer in the following structured format using clear Markdown:\n\n` +
+        `Relevant Experience\n- Use ✅ or ❌ to indicate if the user has relevant work experience for the job.\n- Briefly explain why or why not.\n\n` +
+        `Seniority\n- Use ✅ or ❌ to indicate if the user's seniority matches the job requirements.\n- Briefly explain.\n\n` +
+        `Education\n- Use ✅ or ❌ to indicate if the user's education matches the job requirements.\n- Briefly explain.\n\n` +
+        `Core Skills\n- **Aligned Skills:** List the user's skills that match the job requirements, each with a ✅.\n- **Not Aligned Skills:** List missing or weak skills, each with a ❌.\n\n` +
+        `At the end, provide a short summary of fit and actionable advice.\n\n` +
+        `Never output raw JSON or unformatted text—always use Markdown for clarity.\n`;
+      } else {
+        // Default formatting for other intents
+        systemPrompt += `Always format your answers using clear Markdown structure:\n- Use headings (###) for the job or main section.\n- Use bullet points for skills, requirements, and advice.\n- Use bold for job title, company, and key advice.\n- Use emojis (✅, ❌, 🟡) for fit/match indicators.\n- At the end, provide a summary and actionable advice in a separate section.\n- Never output raw JSON or unformatted text—always use Markdown for clarity.\n`;
+      }
+
       if (intent === 'job_search') {
         systemPrompt += "You help users find suitable job opportunities and provide career guidance. ";
       } else if (intent === 'resume_help') {
