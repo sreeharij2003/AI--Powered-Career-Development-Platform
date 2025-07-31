@@ -1,664 +1,663 @@
-# 🚀 CareerBloom - AI-Powered Career Development Platform
+# 🌟 CareerBloom - AI-Powered Career Development Platform
 
-<div align="center">
-
-![CareerBloom Logo](https://img.shields.io/badge/CareerBloom-AI%20Career%20Platform-blue?style=for-the-badge&logo=rocket)
-
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat&logo=node.js)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=flat&logo=mongodb)](https://www.mongodb.com/)
-[![AI](https://img.shields.io/badge/AI-Gemini%20%7C%20OpenAI-FF6B6B?style=flat&logo=openai)](https://ai.google.dev/)
-
-**A comprehensive AI-powered career development platform that revolutionizes job searching, resume building, and career planning with advanced machine learning and natural language processing.**
-
-[🎯 Features](#-features) • [🛠️ Setup](#️-quick-setup) • [📖 Documentation](#-api-documentation) • [🤖 AI Features](#-ai-powered-features)
-
-</div>
-
----
+CareerBloom is a comprehensive career development platform that leverages AI to help users build resumes, find jobs, assess skills, and plan career paths. Built with React, Node.js, and integrated with multiple AI services including Google Gemini AI.
 
 ## 📋 Table of Contents
 
-- [🎯 Features Overview](#-features-overview)
-- [🛠️ Quick Setup](#️-quick-setup)
-- [📦 Installation](#-installation)
-- [🔧 Configuration](#-configuration)
-- [🤖 AI-Powered Features](#-ai-powered-features)
-- [📖 API Documentation](#-api-documentation)
-- [🎨 UI Components](#-ui-components)
-- [🔄 Prompting Strategies](#-prompting-strategies)
-- [🚀 Deployment](#-deployment)
-- [🧪 Testing](#-testing)
+- [📸 Screenshots](#-screenshots)
+- [🚀 Features Overview](#-features-overview)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [📋 Prerequisites](#-prerequisites)
+- [🔧 Setup Instructions](#-setup-instructions)
+- [🔑 Required API Keys](#-required-api-keys)
+- [📁 Project Structure](#-project-structure)
+- [🚦 Getting Started Guide](#-getting-started-guide)
+- [🔌 API Documentation](#-api-documentation)
+- [🧠 AI Prompting Strategies Used](#-ai-prompting-strategies-used)
+- [🔧 Development](#-development)
+- [🐛 Troubleshooting](#-troubleshooting)
 - [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🆘 Support & Community](#-support--community)
+- [🙏 Acknowledgments](#-acknowledgments)
+
+## 📸 Screenshots
+
+### **🏠 Dashboard Overview**
+![Dashboard](photos/Screenshot%202025-07-16%20215202.png)
+*Main dashboard with all career development tools and features*
+
+### **📝 Resume Builder & Customizer**
+![Resume Builder](photos/Screenshot%202025-07-16%20215211.png)
+*AI-powered resume builder with professional templates and real-time preview*
+
+### **🎯 Job Recommendations**
+![Job Recommendations](photos/Screenshot%202025-07-16%20215237.png)
+*Smart job matching system with personalized recommendations based on skills*
+
+### **📊 Skill Assessment**
+![Skill Assessment](photos/Screenshot%202025-07-16%20215516.png)
+*Interactive skill assessments with AI-generated questions and detailed feedback*
+
+### **🛤️ Career Path Predictor**
+![Career Path](photos/Screenshot%202025-07-16%20215526.png)
+*4-stage career roadmaps with learning resources and actionable steps*
+
+### **📈 Job Trends & Analytics**
+![Job Trends](photos/Screenshot%202025-07-16%20215612.png)
+*Market trend analysis with salary insights and skills demand tracking*
+
+### **🤖 AI Chatbot Integration**
+![AI Chatbot](photos/Screenshot%202025-07-16%20215621.png)
+*Context-aware career advisor with job-specific guidance and interview preparation*
+
+### **🏢 Company Discovery**
+![Company Discovery](photos/Screenshot%202025-07-16%20223646.png)
+*Company profiles and industry insights for informed career decisions*
 
 ---
 
-## 🎯 Features Overview
+## ✨ **Feature Highlights**
 
-### 🎨 **Core Features**
+| 🎯 **Feature** | 🔧 **Technology** | 🚀 **Capability** |
+|---|---|---|
+| **AI Resume Builder** | Gemini AI + Templates | Generate professional resumes with 6 templates |
+| **Job Matching** | Vector Similarity + JSearch API | Find relevant jobs with 90%+ accuracy |
+| **Skill Assessment** | Adaptive AI Questions | 15-question assessments across 4 domains |
+| **Career Roadmaps** | Hierarchical AI Planning | 4-stage development plans with resources |
+| **Resume Customization** | Context-Aware Prompting | Tailor resumes for specific job descriptions |
+| **Market Analytics** | Real-time Data Analysis | Track trends and salary insights |
+| **AI Career Advisor** | Conversational AI | Personalized guidance and interview prep |
+| **Company Intelligence** | Data Aggregation | Comprehensive company profiles and insights |
 
-| Feature | Description | AI Integration | Status |
-|---------|-------------|----------------|--------|
-| **Resume Builder** | Create professional resumes with multiple templates | ✅ AI Content Generation | ✅ Active |
-| **Resume Customizer** | Tailor resumes for specific job applications | ✅ Job-Specific Optimization | ✅ Active |
-| **Job Recommendations** | Intelligent job matching based on skills and experience | ✅ Vector Similarity + RAG | ✅ Active |
-| **Career Path Predictor** | Generate personalized career roadmaps | ✅ Hierarchical Planning | ✅ Active |
-| **Skills Assessment** | Evaluate technical and soft skills with adaptive testing | ✅ Dynamic Question Generation | ✅ Active |
-| **Job Trends Analytics** | Market insights and salary analysis | ✅ Data-Driven Analysis | ✅ Active |
-| **AI Chatbot** | Career counseling and interview preparation | ✅ Conversational AI | ✅ Active |
-| **Cover Letter Generator** | Create tailored cover letters | ✅ Template + LLM Generation | ✅ Active |
+## 🎬 **Quick Demo Journey**
 
-### 🔍 **Advanced Features**
-
-- **🎯 ATS Optimization**: Resume scanning and keyword optimization
-- **📊 Skill Gap Analysis**: Identify missing skills for target roles
-- **🌐 LinkedIn Integration**: Job scraping and profile analysis
-- **📈 Progress Tracking**: Career development monitoring
-- **🔗 Network Recommendations**: Professional connection suggestions
-- **📱 Responsive Design**: Mobile-first UI with dark/light themes
-
----
-
-## 🛠️ Quick Setup
-
-### 📋 Prerequisites
-
-- **Node.js** 18+ and npm
-- **MongoDB** (local or cloud)
-- **Python** 3.8+ (for LinkedIn scraper)
-- **Chrome/Chromium** + ChromeDriver
-
-### ⚡ 5-Minute Setup
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/career-bloom-engine.git
-cd career-bloom-engine
-
-# 2. Install dependencies
-npm install
-cd server && npm install && cd ..
-
-# 3. Set up environment variables
-cp server/.env.example server/.env
-# Edit server/.env with your API keys
-
-# 4. Start the development servers
-npm run dev        # Frontend (http://localhost:5173)
-npm run server     # Backend (http://localhost:3001)
-
-# 5. Seed the database (optional)
-npm run seed-jobs  # Populate with 1000 sample jobs
-```
-
-### 🔑 Required API Keys
-
-Add these to your `server/.env` file:
-
-```env
-# AI Services
-GEMINI_API_KEY=your_gemini_api_key_here
-OPENAI_API_KEY=your_openai_api_key_here
-
-# Job Search
-JSEARCH_API_KEY=your_jsearch_api_key_here
-
-# Database
-MONGODB_URI=mongodb://localhost:27017/careerbloom
-
-# Authentication (optional)
-CLERK_SECRET_KEY=your_clerk_secret_key
-
-# Lightning AI (for resume analysis)
-LIGHTNING_AI_TOKEN=your_lightning_ai_token
-```
-
----
-
-## 📦 Installation
-
-### 🖥️ **Frontend Setup**
-
-```bash
-# Install frontend dependencies
-npm install
-
-# Available scripts
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
-```
-
-### 🔧 **Backend Setup**
-
-```bash
-cd server
-
-# Install backend dependencies
-npm install
-
-# Available scripts
-npm run dev          # Start development server with hot reload
-npm run build        # Compile TypeScript
-npm run start        # Start production server
-npm run seed-jobs    # Populate database with sample jobs
-```
-
-### 🐍 **Python Dependencies (LinkedIn Scraper)**
-
-```bash
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Required packages
-pip install selenium beautifulsoup4 requests pandas
-```
-
----
-
-## 🔧 Configuration
-
-### 🌐 **Environment Variables**
-
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `GEMINI_API_KEY` | Google Gemini AI API key | ✅ | - |
-| `JSEARCH_API_KEY` | JSearch job API key | ✅ | - |
-| `MONGODB_URI` | MongoDB connection string | ✅ | `mongodb://localhost:27017/careerbloom` |
-| `OPENAI_API_KEY` | OpenAI API key (optional) | ❌ | - |
-| `LIGHTNING_AI_TOKEN` | Lightning AI API token | ❌ | - |
-| `PORT` | Server port | ❌ | `3001` |
-| `NODE_ENV` | Environment mode | ❌ | `development` |
-
-### 📁 **Project Structure**
-
-```
-career-bloom-engine/
-├── src/                          # Frontend React application
-│   ├── components/
-│   │   ├── dashboard/           # Main dashboard components
-│   │   ├── ui/                  # Reusable UI components
-│   │   └── career-tools/        # Career-specific tools
-│   ├── pages/                   # Route pages
-│   ├── services/                # API services
-│   └── types/                   # TypeScript definitions
-├── server/                       # Backend Node.js application
-│   ├── controllers/             # Route controllers
-│   ├── models/                  # Database models
-│   ├── routes/                  # API routes
-│   ├── services/                # Business logic services
-│   ├── middleware/              # Express middleware
-│   └── utils/                   # Utility functions
-├── data/                        # Sample data and embeddings
-└── uploads/                     # File upload storage
-```
-
----
-
-## 🤖 AI-Powered Features
-
-### 🧠 **Advanced Prompting Strategies**
-
-CareerBloom uses sophisticated AI prompting techniques for optimal results:
-
-| Feature | Prompting Strategy | AI Model | Purpose |
-|---------|-------------------|----------|---------|
-| **Resume Builder** | Few-Shot + Template-Based | Gemini 1.5 Flash | Consistent formatting and professional content |
-| **Resume Customizer** | Chain-of-Thought + Context-Aware | Gemini 1.5 Flash | Job-specific optimization and ATS compliance |
-| **Job Recommendations** | Semantic Similarity + Multi-Criteria | Vector Embeddings | Intelligent job matching and ranking |
-| **Career Path Predictor** | Hierarchical + Progressive Disclosure | Gemini 1.5 Flash | Structured roadmaps with actionable steps |
-| **Skills Assessment** | Adaptive + Difficulty Scaling | Gemini 1.5 Flash | Personalized question generation |
-| **Job Trends Analytics** | Data-Driven + Predictive | Gemini 1.5 Flash | Market insights and trend analysis |
-| **AI Chatbot** | Conversational + Role-Playing | Gemini 1.5 Flash | Expert career counseling |
-
-### 🎯 **Resume Customization Workflow**
+### **👤 User Journey: From Resume to Dream Job**
 
 ```mermaid
-graph TD
-    A[Upload Resume] --> B[Extract Text & Parse Structure]
-    B --> C[Analyze Job Description]
-    C --> D[Generate Job-Specific Summary]
-    D --> E[Identify Missing Skills]
-    E --> F[Integrate New Content]
-    F --> G[Return Customized Resume]
+graph LR
+    A[📝 Build Resume] --> B[🎯 Get Job Matches]
+    B --> C[📊 Assess Skills]
+    C --> D[🛤️ Plan Career Path]
+    D --> E[🤖 Get AI Advice]
+    E --> F[🏢 Apply to Companies]
 
     style A fill:#e1f5fe
-    style G fill:#c8e6c9
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#fce4ec
+    style F fill:#e0f2f1
 ```
 
-### 🔍 **Job Recommendation Engine**
+1. **📝 Start with Resume Builder** → Create professional resume with AI assistance
+2. **🎯 Get Job Recommendations** → Find matching opportunities based on your skills
+3. **📊 Take Skill Assessments** → Identify strengths and growth areas
+4. **🛤️ Generate Career Roadmap** → Plan your 4-stage career progression
+5. **🤖 Chat with AI Advisor** → Get personalized career guidance
+6. **🏢 Explore Companies** → Research potential employers and opportunities
 
-The system uses a **RAG (Retrieval Augmented Generation)** approach:
+## 🚀 Features Overview
 
-1. **📄 Resume Processing**: Extract and parse resume content
-2. **🔢 Vector Embedding**: Convert text to high-dimensional vectors
-3. **🔍 Similarity Search**: Find matching jobs using cosine similarity
-4. **📊 Scoring Algorithm**: Rank jobs based on multiple factors
-5. **🎯 Personalization**: Adapt recommendations to user preferences
+### 📝 **Resume Builder & Customizer**
+- **AI-Powered Resume Generation** with 6 professional templates
+- **Job-Specific Resume Customization** using Gemini AI with advanced prompting strategies
+- **ATS-Optimized Content** with keyword optimization and skills enhancement
+- **Real-time Preview** and PDF export functionality
+- **Paste Resume Feature** for quick text-based customization
+- **Summary Replacement** and intelligent skills integration
 
-```typescript
-// Example: Job Recommendation API
-const recommendations = await fetch('/api/job-recommendations/recommendations', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    resumeText: userResume,
-    preferences: { location: 'Remote', salaryMin: 80000 },
-    limit: 10
-  })
-});
+### 🎯 **Job Recommendations System**
+- **Smart Job Matching** using JSearch API integration with 1000+ real job listings
+- **Vector-based Similarity Matching** using Pinecone for accurate recommendations
+- **Skills-Based Filtering** with personalized job suggestions
+- **Fallback Skills System** (Python, Java, React, Node.js, etc.) for enhanced matching
+- **Real-time Job Data** from multiple job boards and platforms
+- **Resume-to-Job Matching** with compatibility scoring
+
+### 🏢 **Company Discovery**
+- **Company Profiles** extracted from job data with detailed information
+- **Industry Insights** and company culture analysis
+- **Location-based Filtering** and advanced search capabilities
+- **Company Size and Type** categorization
+
+### 📊 **Skill Assessment & Analysis**
+- **15-Question Assessments** per skill category with AI-generated questions
+- **Adaptive Prompting** that adjusts difficulty based on user responses
+- **Personalized Feedback** and comprehensive skill gap analysis
+- **Progress Tracking** across Technology, Business, Healthcare, and Creative domains
+- **Lightning AI Integration** for advanced resume analysis
+
+### 🛤️ **Career Path Predictor**
+- **4-Stage Career Roadmaps** with detailed progression plans and timelines
+- **Hierarchical Prompting** for structured career guidance
+- **Learning Resource Integration** (YouTube tutorials, Coursera courses)
+- **Skills Development Timeline** with actionable steps and milestones
+- **Multiple Career Domains** (Software Engineering, Data Science, Product Management, etc.)
+
+### 📈 **Job Trends & Analytics**
+- **Market Trend Analysis** using real job data with 7-day collection cycles
+- **Data-Driven Prompting** for factual insights and predictions
+- **Salary Insights** and growth predictions by location and role
+- **Skills Demand Tracking** across industries and technologies
+- **RAG-based Analytics** with comprehensive market intelligence
+
+### 🤖 **AI Chatbot Integration**
+- **Context-Aware Career Advice** using DeepSeek/Gemini AI
+- **Role-Playing Prompting** as senior career counselor
+- **Job-Specific Guidance** with automatic resume and job data integration
+- **Interview Preparation** and personalized career planning support
+- **Conversational AI** with multi-turn context preservation
+
+### 📄 **Cover Letter Generator**
+- **Fine-tuned GPT-2 Model** for personalized content generation
+- **Template-Based Fallback** system for reliability
+- **Job Description Integration** for highly targeted content
+- **Professional Formatting** with multiple style options
+
+## 🛠️ Technology Stack
+
+### **Frontend**
+- **React 18** with TypeScript for type safety
+- **Tailwind CSS** for utility-first styling
+- **Radix UI** components for accessibility
+- **React Router** for client-side navigation
+- **Clerk** for secure authentication
+- **SWR** for efficient data fetching and caching
+
+### **Backend**
+- **Node.js** with Express framework
+- **TypeScript** for full-stack type safety
+- **MongoDB** with Mongoose ODM
+- **Multer** for file upload handling
+- **CORS** and comprehensive security middleware
+
+### **AI & Machine Learning**
+- **Google Gemini AI** (gemini-1.5-flash) with advanced prompting strategies
+- **JSearch API** for comprehensive job data
+- **Lightning AI** for resume analysis and skill extraction
+- **Fine-tuned GPT-2** for cover letter generation
+- **OpenAI Embeddings** for vector similarity matching
+
+### **Vector Database & Search**
+- **Pinecone** for high-performance similarity search
+- **Vector Embeddings** for job-resume matching
+- **RAG Architecture** for enhanced recommendations
+
+## 📋 Prerequisites
+
+Before setting up CareerBloom, ensure you have:
+
+- **Node.js** (v16 or higher)
+- **npm** or **yarn** package manager
+- **MongoDB** (local installation or cloud instance)
+- **Git** for version control
+- **Chrome/Chromium** browser (for LinkedIn scraping)
+
+## 🔧 Setup Instructions
+
+### 1. **Clone the Repository**
+```bash
+git clone <repository-url>
+cd career-bloom-engine-main
 ```
 
----
+### 2. **Install Dependencies**
 
-## 📖 API Documentation
-
-### 🎯 **Resume APIs**
-
-#### **Resume Builder**
-```http
-POST /api/resume-builder/generate
-Content-Type: application/json
-
-{
-  "personalInfo": { "name": "John Doe", "email": "john@example.com" },
-  "experience": [...],
-  "skills": ["React", "Node.js"],
-  "template": "modern"
-}
+**Frontend Dependencies:**
+```bash
+npm install
 ```
 
-#### **Resume Customizer**
+**Backend Dependencies:**
+```bash
+cd server
+npm install
+cd ..
+```
+
+**Python Dependencies (for LinkedIn scraper):**
+```bash
+pip install -r requirements.txt
+```
+
+### 3. **Environment Configuration**
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Clerk Authentication
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_key_here
+
+# API Configuration
+VITE_API_URL=http://localhost:5000
+
+# Google Gemini AI (Required)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# MongoDB Database (Required)
+MONGODB_URI=mongodb://localhost:27017/careerbloom
+
+# JSearch API for Job Data (Required)
+JSEARCH_API_KEY=your_jsearch_api_key_here
+
+# Pinecone Vector Database (Optional - for enhanced job matching)
+PINECONE_API_KEY=your_pinecone_api_key
+PINECONE_ENVIRONMENT=your_pinecone_environment
+
+# Lightning AI for Resume Analysis (Optional)
+LIGHTNING_AI_TOKEN=your_lightning_ai_token
+LIGHTNING_AI_ENDPOINT=https://your-lightning-endpoint.litng.ai/predict
+
+# OpenAI (Optional - for embeddings if using Pinecone)
+OPENAI_API_KEY=your_openai_api_key
+```
+
+### 4. **Database Setup**
+
+**MongoDB Setup:**
+```bash
+# Start MongoDB service (if running locally)
+mongod
+
+# The database will be created automatically on first connection
+```
+
+**Pinecone Setup (Optional):**
+1. Create account at [Pinecone](https://pinecone.io)
+2. Create an index named `job-recommendations`
+3. Set dimension to `1536` (for OpenAI embeddings)
+4. Use cosine similarity metric
+
+### 5. **Seed the Database**
+
+**Populate with sample job data:**
+```bash
+npm run seed-jobs
+```
+
+This will:
+- Generate 1000 diverse job listings
+- Add jobs to MongoDB
+- Create vector embeddings for job matching
+- Set up the recommendation system
+
+### 6. **Start the Application**
+
+**Development Mode:**
+```bash
+# Terminal 1: Start backend server
+cd server
+npm run dev
+
+# Terminal 2: Start frontend development server
+npm run dev
+```
+
+**Production Mode:**
+```bash
+# Build frontend
+npm run build
+
+# Start production server
+cd server
+npm start
+```
+
+### 7. **Access the Application**
+- **Frontend:** http://localhost:8080
+- **Backend API:** http://localhost:5000
+- **Health Check:** http://localhost:5000/api/health
+
+## 🔑 Required API Keys
+
+### **Essential APIs (Required for core functionality):**
+
+1. **Google Gemini AI API**
+   - Get from: [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Used for: Resume customization, career advice, skill assessment
+   - Cost: Free tier available
+
+2. **JSearch API**
+   - Get from: [RapidAPI JSearch](https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch)
+   - Used for: Real job data and recommendations
+   - Cost: Free tier with 100 requests/month
+
+3. **Clerk Authentication**
+   - Get from: [Clerk Dashboard](https://clerk.com)
+   - Used for: User authentication and management
+   - Cost: Free tier for up to 10,000 users
+
+4. **MongoDB**
+   - Local installation or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+   - Used for: Data storage
+   - Cost: Free tier available
+
+### **Optional APIs (Enhanced functionality):**
+
+1. **Pinecone Vector Database**
+   - Get from: [Pinecone](https://pinecone.io)
+   - Used for: Enhanced job matching with vector similarity
+   - Cost: Free tier available
+
+2. **Lightning AI**
+   - Custom endpoint for resume analysis
+   - Used for: Advanced resume skill extraction
+   - Cost: Varies by usage
+
+3. **OpenAI API**
+   - Get from: [OpenAI Platform](https://platform.openai.com)
+   - Used for: Vector embeddings (if using Pinecone)
+   - Cost: Pay-per-use
+
+## 📁 Project Structure
+
+```
+career-bloom-engine-main/
+├── 📁 src/                          # Frontend React application
+│   ├── 📁 components/               # React components
+│   │   ├── 📁 dashboard/           # Dashboard components
+│   │   │   ├── ResumeBuilder.tsx   # AI-powered resume builder
+│   │   │   ├── ResumeCustomizer.tsx # Job-specific customization
+│   │   │   ├── JobRecommendations.tsx # Job matching system
+│   │   │   ├── AssessmentQuiz.tsx  # Skill assessments
+│   │   │   └── Chatbot.tsx         # AI career advisor
+│   │   ├── 📁 career-tools/        # Career planning tools
+│   │   │   └── CareerPathPredictor.tsx # Career roadmaps
+│   │   └── 📁 layout/              # Layout components
+│   ├── 📁 pages/                   # Page components
+│   ├── 📁 services/                # API service functions
+│   ├── 📁 contexts/                # React contexts
+│   └── 📁 data/                    # Static data and configurations
+├── 📁 server/                      # Backend Node.js application
+│   ├── 📁 controllers/             # Route controllers
+│   │   ├── resumeController.ts     # Resume operations
+│   │   ├── resumeCustomizationController.ts # AI customization
+│   │   ├── jobController.ts        # Job management
+│   │   ├── jobRecommendationController.ts # Recommendation engine
+│   │   └── coverLetterController.ts # Cover letter generation
+│   ├── 📁 models/                  # MongoDB models
+│   ├── 📁 routes/                  # API routes
+│   ├── 📁 services/                # Business logic services
+│   ├── 📁 utils/                   # Utility functions
+│   ├── 📁 jobRecommendations/      # Job recommendation system
+│   └── 📁 src/                     # Additional server source
+│       └── 📁 services/            # AI services (Gemini, etc.)
+├── 📁 public/                      # Static assets
+├── 📁 docs/                        # Documentation
+└── 📄 README.md                    # This file
+```
+
+## 🚦 Getting Started Guide
+
+### **Step 1: First Time Setup**
+1. Complete the installation following setup instructions above
+2. Ensure all required API keys are configured in `.env`
+3. Start MongoDB service
+4. Run database seeding: `npm run seed-jobs`
+
+### **Step 2: Launch Application**
+1. Start backend: `cd server && npm run dev`
+2. Start frontend: `npm run dev`
+3. Open browser to http://localhost:8080
+
+### **Step 3: Explore Features**
+1. **Register/Login** using Clerk authentication
+2. **Build Resume** - Use AI-powered resume builder with templates
+3. **Customize Resume** - Paste resume text and job description for AI optimization
+4. **Get Job Recommendations** - Upload resume or use skills for job matching
+5. **Take Skill Assessments** - Evaluate your skills across different domains
+6. **Generate Career Roadmap** - Get 4-stage career development plan
+7. **Use AI Chatbot** - Get personalized career advice and guidance
+
+## 🔌 API Documentation
+
+### **Resume Customization API**
+
+#### Customize Resume from Text
 ```http
 POST /api/resume-customization/customize-text
 Content-Type: application/json
 
 {
   "resumeText": "Your complete resume text...",
-  "jobDescription": "Target job description...",
+  "jobDescription": "Target job description..."
 }
 ```
 
-### 🔍 **Job Recommendation APIs**
+#### Response
+```json
+{
+  "success": true,
+  "data": {
+    "originalResume": "...",
+    "customizedResume": "...",
+    "newSummary": "AI-generated summary",
+    "addedSkills": ["React.js", "Node.js", "AWS"]
+  }
+}
+```
 
-#### **Get Recommendations**
+### **Job Recommendations API**
+
+#### Get Recommendations from Resume
 ```http
 POST /api/job-recommendations/recommendations
 Content-Type: application/json
 
 {
-  "resumeText": "Your resume content...",
-  "limit": 10,
-  "filters": {
-    "location": "Remote",
-    "salaryMin": 70000,
-    "experienceLevel": "mid"
-  }
+  "resumeText": "Your resume text...",
+  "limit": 10
 }
 ```
 
-#### **Add Jobs to Database**
+#### Get Job Trends
 ```http
-POST /api/job-recommendations/add-jobs
+GET /api/jobs/trends
+```
+
+### **Skill Assessment API**
+
+#### Get Assessment Questions
+```http
+GET /api/assessments/questions/:category
+```
+
+#### Submit Assessment
+```http
+POST /api/assessments/submit
 Content-Type: application/json
 
 {
-  "jobs": [
-    {
-      "title": "Senior React Developer",
-      "company": "TechCorp",
-      "description": "Build scalable web applications...",
-      "skills": ["React", "TypeScript", "Node.js"],
-      "salary": { "min": 90000, "max": 120000 },
-      "location": "San Francisco, CA",
-      "remote": true
-    }
-  ]
+  "category": "technology",
+  "answers": [1, 2, 0, 3, 1, ...]
 }
 ```
 
-### 🛤️ **Career Path APIs**
+### **Career Path API**
 
-#### **Generate Career Roadmap**
+#### Generate Career Roadmap
 ```http
 POST /api/career-path/generate
 Content-Type: application/json
 
 {
   "currentRole": "Junior Developer",
-  "targetRole": "Senior Full Stack Developer",
-  "timeframe": "2 years",
+  "targetRole": "Senior Software Engineer",
   "skills": ["JavaScript", "React"]
 }
 ```
 
-### 📊 **Skills Assessment APIs**
+## 🧠 AI Prompting Strategies Used
 
-#### **Start Assessment**
-```http
-POST /api/skills-assessment/start
-Content-Type: application/json
+CareerBloom implements advanced AI prompting strategies for optimal results:
 
-{
-  "category": "frontend",
-  "difficulty": "intermediate",
-  "questionCount": 15
-}
-```
+### **1. Few-Shot Prompting** 🎯
+- **Used in:** Resume Builder, Content Generation
+- **How:** Provides examples before requesting output
+- **Benefit:** Consistent formatting and professional quality
 
-#### **Submit Answers**
-```http
-POST /api/skills-assessment/submit
-Content-Type: application/json
+### **2. Chain-of-Thought Prompting** 🔗
+- **Used in:** Resume Customization, Skill Analysis
+- **How:** Breaks complex tasks into logical steps
+- **Benefit:** Better reasoning and more accurate results
 
-{
-  "assessmentId": "uuid",
-  "answers": [
-    { "questionId": 1, "selectedOption": "A" },
-    { "questionId": 2, "selectedOption": "C" }
-  ]
-}
-```
+### **3. Context-Aware Prompting** 📋
+- **Used in:** All job-related features
+- **How:** Includes relevant context (job descriptions, resume data)
+- **Benefit:** Highly personalized and relevant outputs
 
----
+### **4. Hierarchical Prompting** 🏗️
+- **Used in:** Career Path Predictor
+- **How:** Structures output in organized levels/stages
+- **Benefit:** Clear, actionable career roadmaps
 
-## 🎨 UI Components
+### **5. Adaptive Prompting** 🔄
+- **Used in:** Skill Assessment, Chatbot
+- **How:** Adjusts based on user responses and skill level
+- **Benefit:** Personalized difficulty and relevant advice
 
-### 📱 **Dashboard Components**
+### **6. Role-Playing Prompting** 🎭
+- **Used in:** AI Chatbot, Career Advice
+- **How:** AI assumes expert career counselor role
+- **Benefit:** Professional, domain-specific guidance
 
-- **`ResumeBuilder`**: Multi-step resume creation with AI assistance
-- **`ResumeCustomizer`**: Job-specific resume optimization
-- **`JobRecommendations`**: Intelligent job matching interface
-- **`CareerPathPredictor`**: Interactive career roadmap generator
-- **`SkillsAssessment`**: Adaptive skill evaluation system
-- **`ProgressDashboard`**: Career development tracking
-- **`AIResumeFeatures`**: AI-powered resume enhancements
+## 🔧 Development
 
-### 🎯 **Specialized Tools**
-
-- **`SkillGapAnalyzer`**: Identify missing skills for target roles
-- **`SalaryFilter`**: Advanced salary and location filtering
-- **`ConnectionRecommender`**: Professional networking suggestions
-- **`AssessmentQuiz`**: Interactive skill testing interface
-
-### 🎨 **UI Framework**
-
-Built with **shadcn/ui** components and **Tailwind CSS**:
-
-- **Responsive Design**: Mobile-first approach
-- **Dark/Light Themes**: Automatic theme switching
-- **Accessibility**: WCAG 2.1 compliant
-- **Modern Animations**: Smooth transitions and micro-interactions
-
----
-
-## 🔄 Prompting Strategies
-
-### 🧠 **Advanced AI Techniques**
-
-CareerBloom implements cutting-edge prompting strategies for optimal AI performance:
-
-#### **1. Few-Shot Prompting** 🎯
-```typescript
-// Used in: Resume Builder, Content Generation
-const prompt = `Generate a professional summary for a ${jobTitle} role.
-
-Examples:
-Software Engineer: "Experienced software engineer with 3+ years developing scalable web applications..."
-Data Scientist: "Results-driven data scientist with expertise in machine learning..."
-
-Now generate for: ${jobTitle}
-Skills: ${skills.join(', ')}`;
-```
-
-#### **2. Chain-of-Thought Prompting** 🔗
-```typescript
-// Used in: Resume Customizer, Skill Analysis
-const prompt = `Analyze job compatibility step by step:
-
-Step 1: Extract key requirements from job description
-Step 2: Identify user's relevant skills and experience
-Step 3: Calculate skill match percentage
-Step 4: Suggest improvements
-
-Job Description: "${jobDescription}"
-Resume: "${resumeText}"`;
-```
-
-#### **3. Context-Aware Prompting** 📋
-```typescript
-// Used in: All job-related features
-const prompt = `You are a senior career counselor with 15+ years experience.
-
-Context:
-- User's Resume: ${resumeData}
-- Target Job: ${jobData}
-- Industry: ${industry}
-
-Provide personalized career advice considering the user's background and target role.`;
-```
-
-#### **4. Hierarchical Prompting** 🏗️
-```typescript
-// Used in: Career Path Predictor
-const prompt = `Create a 4-stage career roadmap for ${careerPath}:
-
-Stage 1 (0-6 months): Foundation
-- Core skills to learn
-- Beginner projects
-- Learning resources
-
-Stage 2 (6-12 months): Intermediate
-- Advanced concepts
-- Portfolio projects
-- Certifications
-
-[Continue for all 4 stages...]`;
-```
-
-### 🎛️ **Prompt Optimization Techniques**
-
-- **Temperature Control**: Creative tasks (0.7-0.9) vs Analytical tasks (0.1-0.3)
-- **Token Optimization**: Efficient prompts within API limits
-- **Error Handling**: Fallback prompts for failed requests
-- **Multi-Turn Conversations**: Context preservation across sessions
-
----
-
-## 🚀 Deployment
-
-### 🌐 **Production Deployment**
-
-#### **Frontend (Vercel/Netlify)**
+### **Available Scripts:**
 ```bash
-# Build for production
-npm run build
+# Frontend Development
+npm run dev          # Start development server (Vite)
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
 
-# Deploy to Vercel
-vercel --prod
+# Backend Development
+cd server
+npm run dev          # Start with nodemon (auto-restart)
+npm start            # Start production server
+npm run test         # Run test suite
 
-# Deploy to Netlify
-netlify deploy --prod --dir=dist
+# Database Operations
+npm run seed-jobs    # Populate database with sample jobs
+npm run clear-db     # Clear all data (use with caution)
 ```
 
-#### **Backend (Railway/Heroku)**
-```bash
-# Build backend
-cd server && npm run build
+### **Code Quality Tools:**
+- **TypeScript** for type safety across frontend and backend
+- **ESLint** for code linting and consistency
+- **Prettier** for automatic code formatting
+- **Husky** for git hooks (if configured)
 
-# Deploy to Railway
-railway deploy
-
-# Deploy to Heroku
-git push heroku main
-```
-
-#### **Database (MongoDB Atlas)**
-```bash
-# Update connection string in production
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/careerbloom
-```
-
-### 🐳 **Docker Deployment**
-
-```dockerfile
-# Dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY . .
-RUN npm run build
-
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-```yaml
-# docker-compose.yml
-version: '3.8'
-services:
-  frontend:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-
-  backend:
-    build: ./server
-    ports:
-      - "3001:3001"
-    environment:
-      - MONGODB_URI=mongodb://mongo:27017/careerbloom
-    depends_on:
-      - mongo
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
-```
-
----
-
-## 🧪 Testing
-
-### 🔬 **Test Coverage**
-
+### **Testing:**
 ```bash
 # Run all tests
 npm test
 
-# Run with coverage
-npm run test:coverage
-
 # Run specific test suites
-npm run test:unit        # Unit tests
-npm run test:integration # Integration tests
-npm run test:e2e         # End-to-end tests
+npm run test:unit
+npm run test:integration
+npm run test:e2e
 ```
 
-### 🎯 **API Testing**
+## 🐛 Troubleshooting
 
-```bash
-# Test resume customization
-curl -X POST http://localhost:3001/api/resume-customization/customize-text \
-  -H "Content-Type: application/json" \
-  -d '{
-    "resumeText": "Your resume text...",
-    "jobDescription": "Job description..."
-  }'
+### **Common Issues:**
 
-# Test job recommendations
-curl -X POST http://localhost:3001/api/job-recommendations/recommendations \
-  -H "Content-Type: application/json" \
-  -d '{
-    "resumeText": "Your resume text...",
-    "limit": 5
-  }'
-```
+#### **1. LinkedIn Scraper Issues**
+- Ensure Chrome/Chromium is installed
+- Download matching ChromeDriver version
+- Check if ChromeDriver is in system PATH
+- Reduce scraping frequency if rate-limited
 
-### 🔍 **Performance Testing**
+#### **2. AI API Errors**
+- Verify Gemini API key is valid and has quota
+- Check internet connection for API calls
+- Review API usage limits and billing
+- Use fallback mechanisms when available
 
-- **Load Testing**: Artillery.js for API endpoints
-- **Frontend Performance**: Lighthouse CI integration
-- **Database Performance**: MongoDB profiling and indexing
+#### **3. Database Connection Issues**
+- Ensure MongoDB is running (`mongod` command)
+- Check MongoDB URI in `.env` file
+- Verify database permissions and access
+- Check network connectivity for cloud databases
 
----
+#### **4. Build/Deployment Issues**
+- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
+- Check Node.js version compatibility (v16+)
+- Verify all environment variables are set
+- Review build logs for specific error messages
+
+### **Performance Optimization:**
+- Use SWR caching for API calls
+- Implement lazy loading for components
+- Optimize bundle size with code splitting
+- Use MongoDB indexing for faster queries
 
 ## 🤝 Contributing
 
-### 📝 **Development Guidelines**
+We welcome contributions to CareerBloom! Here's how to get started:
 
-1. **Fork the repository** and create a feature branch
-2. **Follow coding standards**: ESLint + Prettier configuration
-3. **Write tests** for new features and bug fixes
-4. **Update documentation** for API changes
-5. **Submit a pull request** with detailed description
+### **Development Workflow:**
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Make** your changes with proper TypeScript types
+4. **Test** your changes thoroughly
+5. **Commit** with descriptive messages (`git commit -m 'Add amazing feature'`)
+6. **Push** to your branch (`git push origin feature/amazing-feature`)
+7. **Open** a Pull Request with detailed description
 
-### 🏗️ **Project Structure Guidelines**
+### **Contribution Guidelines:**
+- Follow existing code style and conventions
+- Add TypeScript types for all new code
+- Include tests for new functionality
+- Update documentation for API changes
+- Ensure all tests pass before submitting PR
 
-```
-src/
-├── components/
-│   ├── ui/              # Reusable UI components
-│   ├── dashboard/       # Feature-specific components
-│   └── career-tools/    # Specialized career tools
-├── services/            # API integration layer
-├── hooks/               # Custom React hooks
-├── types/               # TypeScript definitions
-└── utils/               # Helper functions
-```
-
-### 🎨 **Code Style**
-
-- **TypeScript**: Strict mode enabled
-- **React**: Functional components with hooks
-- **Styling**: Tailwind CSS with shadcn/ui
-- **State Management**: React Query + Context API
-
-### 🔧 **Adding New Features**
-
-1. **Create component** in appropriate directory
-2. **Add API endpoint** in server/routes
-3. **Implement controller** logic
-4. **Add TypeScript types**
-5. **Write unit tests**
-6. **Update documentation**
-
----
+### **Areas for Contribution:**
+- 🐛 Bug fixes and performance improvements
+- ✨ New AI prompting strategies
+- 🎨 UI/UX enhancements
+- 📚 Documentation improvements
+- 🧪 Test coverage expansion
+- 🌐 Internationalization support
 
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
----
+## 🆘 Support & Community
+
+### **Getting Help:**
+- 📖 **Documentation:** Check `/docs` folder for detailed guides
+- 🐛 **Issues:** Create GitHub issues for bugs and feature requests
+- 💬 **Discussions:** Use GitHub Discussions for questions
+- 📧 **Email:** Contact maintainers for urgent issues
+
+### **API Health Checks:**
+- **Backend Health:** http://localhost:5000/api/health
+- **Database Status:** http://localhost:5000/api/db-status
+- **AI Services:** http://localhost:5000/api/ai-health
 
 ## 🙏 Acknowledgments
 
-- **Google Gemini AI** for advanced language processing
-- **OpenAI** for GPT model integration
-- **shadcn/ui** for beautiful UI components
-- **Tailwind CSS** for utility-first styling
-- **React Query** for efficient data fetching
-- **MongoDB** for flexible data storage
+Special thanks to the amazing services and tools that make CareerBloom possible:
+
+- **🤖 Google Gemini AI** - Advanced AI capabilities and natural language processing
+- **🔍 JSearch API** - Comprehensive real-time job data
+- **🔐 Clerk** - Seamless authentication and user management
+- **🎨 Radix UI** - Accessible and customizable UI components
+- **⚡ Tailwind CSS** - Utility-first CSS framework
+- **🗄️ MongoDB** - Flexible and scalable database solution
+- **🔗 Pinecone** - High-performance vector database
+- **⚡ Lightning AI** - Advanced resume analysis capabilities
+
+## 🌟 Star History
+
+If you find CareerBloom helpful, please consider giving it a star ⭐ on GitHub!
 
 ---
 
-<div align="center">
+**🚀 Built with ❤️ for career growth and professional development**
 
-**Built with ❤️ by the CareerBloom Team**
-
-[🌟 Star this repo](https://github.com/your-username/career-bloom-engine) • [🐛 Report Bug](https://github.com/your-username/career-bloom-engine/issues) • [💡 Request Feature](https://github.com/your-username/career-bloom-engine/issues)
-
-</div>
+*Empowering careers through AI-driven insights and personalized guidance*
